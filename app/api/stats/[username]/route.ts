@@ -1,6 +1,6 @@
-import { fetchPlays } from '@/bgg/fetchPlays';
-import { calculateStats } from '@/stats/calculateStats';
 import { NextRequest } from 'next/server';
+
+import { getStatsForUsername } from '@/stats/getStatsForUsername';
 
 interface RouteParams {
   username: string;
@@ -14,22 +14,14 @@ export const GET = async (
 
   const query = request.nextUrl.searchParams;
   const year = query.get('year');
-  const month = query.get('month');
+  const month = query.get('month') || undefined;
   const sortBy = query.get('sortBy') || 'plays';
 
   if (!year) {
     return new Response(`Missing required parameter 'year'`);
   }
 
-  const startDate = !!month ? `${year}-${month}-01` : `${year}-01-01`;
-  const endDate = !!month ? `${year}-${month}-31` : `${year}-12-31`;
-
-  const plays = await fetchPlays(username, startDate, endDate);
-  const stats = calculateStats({
-    plays,
-    sortBy,
-    username,
-  });
+  const stats = await getStatsForUsername({ username, year, month, sortBy });
 
   return new Response(JSON.stringify(stats, null, 2));
 };

@@ -11,7 +11,7 @@ interface CalculateStatsParams {
   sortBy: string;
 }
 
-export const calculateStats = ({
+export const calculateStatsFromPlays = ({
   plays,
   username,
   sortBy,
