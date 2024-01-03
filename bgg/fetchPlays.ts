@@ -5,7 +5,7 @@ import { BGGPlay } from './types';
 
 export interface BGGPlaysResponse {
   plays: {
-    play: BGGPlay[];
+    play?: BGGPlay[];
     username: string;
     userid: string;
     total: string;
@@ -29,7 +29,7 @@ export const fetchPlays = async (username: string, endDate: string) => {
   const total = parseInt(response.plays.total, 10);
   const numPages = Math.ceil(total / 100);
 
-  let plays = response.plays.play;
+  let plays = response.plays.play || [];
 
   for (let page = 2; page <= numPages; page++) {
     const pageResponse = await makeRequest('plays', {
@@ -41,7 +41,7 @@ export const fetchPlays = async (username: string, endDate: string) => {
       throw new Error(`BGG failed to return page ${page}`);
     }
 
-    plays = plays.concat(pageResponse.plays.play);
+    plays = plays.concat(pageResponse.plays.play || []);
   }
 
   const filteredPlays = plays.filter(
