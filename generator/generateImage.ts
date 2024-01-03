@@ -138,16 +138,76 @@ export const generateImage = ({
     bottomRowCount * boxArtSize + Math.max(0, bottomRowCount - 1) * spacing;
   const bottomRowStartX = leftEdge + (availableSpace - bottomRowWidth) / 2;
 
-  ctx.fillStyle = '#aaaaaa';
+  ctx.font = '36px Atkinson Hyperlegible';
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+
+  const showPlays = sortBy === 'plays';
 
   for (let i = 0; i < topRowCount; i++) {
+    const game = stats.mostPlayedGames[i];
+
     const x = topRowStartX + i * boxArtSize + i * spacing;
+    ctx.fillStyle = '#aaaaaa';
     ctx.fillRect(x, 910, boxArtSize, boxArtSize);
+
+    const hours = Math.round(game.minutesPlayed / 60);
+    const amount = showPlays
+      ? `${game.plays} ${game.plays === 1 ? 'play' : 'plays'}`
+      : `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+
+    const textX = x + boxArtSize / 2;
+    const { width: textWidth } = ctx.measureText(amount);
+
+    ctx.fillStyle = '#eeeeee';
+    ctx.shadowColor = 'black';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.roundRect(
+      textX - textWidth / 2 - 16,
+      910 + boxArtSize - 32,
+      textWidth + 32,
+      58,
+      10
+    );
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'black';
+    ctx.fillText(amount, textX, 910 + boxArtSize);
   }
 
   for (let i = 0; i < bottomRowCount; i++) {
+    const game = stats.mostPlayedGames[i + topRowCount];
+
     const x = bottomRowStartX + i * boxArtSize + i * spacing;
+    ctx.fillStyle = '#aaaaaa';
     ctx.fillRect(x, 1235, boxArtSize, boxArtSize);
+
+    const hours = Math.round(game.minutesPlayed / 60);
+    const amount = showPlays
+      ? `${game.plays} ${game.plays === 1 ? 'play' : 'plays'}`
+      : `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+
+    const textX = x + boxArtSize / 2;
+    const { width: textWidth } = ctx.measureText(amount);
+
+    ctx.fillStyle = '#eeeeee';
+    ctx.shadowColor = 'black';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.roundRect(
+      textX - textWidth / 2 - 16,
+      1235 + boxArtSize - 32,
+      textWidth + 32,
+      58,
+      10
+    );
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'black';
+    ctx.fillText(amount, textX, 1235 + boxArtSize);
   }
 
   const imageData = canvas.toDataURL('image/png');
