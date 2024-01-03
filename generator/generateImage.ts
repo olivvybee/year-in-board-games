@@ -116,7 +116,39 @@ export const generateImage = ({
   );
 
   ctx.font = '50px Atkinson Hyperlegible';
-  ctx.fillText('Most played games', canvas.width / 2, 850);
+  ctx.fillText('Most played games', canvas.width / 2, 830);
+
+  const numMostPlayed = stats.mostPlayedGames.length;
+  const rows = Math.ceil(numMostPlayed / 5);
+  const topRowCount = rows === 1 ? numMostPlayed : Math.ceil(numMostPlayed / 2);
+  const bottomRowCount = numMostPlayed - topRowCount;
+
+  const leftEdge = 100;
+  const rightEdge = canvas.width - 100;
+  const availableSpace = rightEdge - leftEdge;
+  const boxArtSize = 267;
+
+  const spacing = (availableSpace - 5 * boxArtSize) / 4;
+
+  const topRowWidth =
+    topRowCount * boxArtSize + Math.max(0, topRowCount - 1) * spacing;
+  const topRowStartX = leftEdge + (availableSpace - topRowWidth) / 2;
+
+  const bottomRowWidth =
+    bottomRowCount * boxArtSize + Math.max(0, bottomRowCount - 1) * spacing;
+  const bottomRowStartX = leftEdge + (availableSpace - bottomRowWidth) / 2;
+
+  ctx.fillStyle = '#aaaaaa';
+
+  for (let i = 0; i < topRowCount; i++) {
+    const x = topRowStartX + i * boxArtSize + i * spacing;
+    ctx.fillRect(x, 910, boxArtSize, boxArtSize);
+  }
+
+  for (let i = 0; i < bottomRowCount; i++) {
+    const x = bottomRowStartX + i * boxArtSize + i * spacing;
+    ctx.fillRect(x, 1235, boxArtSize, boxArtSize);
+  }
 
   const imageData = canvas.toDataURL('image/png');
   return imageData;
