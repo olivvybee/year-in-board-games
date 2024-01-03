@@ -5,6 +5,7 @@ import { generateImage } from '@/generator/generateImage';
 import { Stats } from '@/stats/types';
 
 import styles from './Result.module.css';
+import { Sidebar } from '../Sidebar';
 
 interface ResultProps {
   stats: Stats;
@@ -24,9 +25,14 @@ export const Result = ({ stats }: ResultProps) => {
   }, [stats]);
 
   return (
-    <div>
+    <>
+      <div className={styles.wrapper}>
+        <img ref={imageRef} src={imageData} className={styles.outputImage} />
+
+        <Sidebar imageData={imageData} stats={stats} />
+      </div>
+
       <canvas ref={canvasRef} className={styles.canvas} />
-      <img ref={imageRef} src={imageData} className={styles.outputImage} />
-    </div>
+    </>
   );
 };

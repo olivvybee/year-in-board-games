@@ -1,0 +1,54 @@
+.sidebar {
+  flex: 1;
+  max-width: 300px;
+  border: 1px solid var(--primary-muted);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.spacer {
+  height: 0;
+  margin: 32px 0;
+  width: 100%;
+  border-bottom: 1px solid var(--primary-muted);
+}
+
+.helpText {
+  margin: 0;
+}
+
+.altText {
+  padding-top: 8px;
+  margin: 0;
+}
+
+.altTextTitle {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-right: 16px;
+}
+
+.altTextTitleWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.altTextExplanation {
+  margin-top: 16px;
+}
+
+.altTextExplanation p:last-child {
+  margin: 0;
+}
+
+@media screen and (max-width: 500px) {
+  .sidebar {
+    max-width: 100%;
+  }
+}

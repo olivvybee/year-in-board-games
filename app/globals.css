@@ -16,14 +16,14 @@ body {
 }
 
 a {
-  color: #b79aff;
+  color: var(--primary);
 }
 
 a:focus,
 a:hover {
-  color: #c2a9ff;
+  color: var(--primary-hover);
 }
 
 a:active {
-  color: #ac8bff;
+  color: var(--primary-active);
 }

@@ -1,6 +1,10 @@
 import { Result } from '@/components/Result';
 import { getStatsForUsername } from '@/stats/getStatsForUsername';
 
+import styles from './page.module.css';
+import { Sidebar } from '@/components/Sidebar';
+import { useState } from 'react';
+
 interface ViewPageProps {
   searchParams: {
     username?: string;
