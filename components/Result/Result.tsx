@@ -23,7 +23,11 @@ export const Result = ({ stats, ...props }: ResultProps) => {
 
   useEffect(() => {
     if (canvasRef.current && imageRef.current) {
-      const newImageData = generateImage(canvasRef.current, stats);
+      const newImageData = generateImage({
+        canvas: canvasRef.current,
+        stats,
+        ...props,
+      });
       setImageData(newImageData);
     }
   }, [stats]);
