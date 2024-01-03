@@ -1,10 +1,11 @@
-import { BggPlaysPlayDto } from 'boardgamegeekclient/dist/esm/dto/concrete/subdto';
 import _orderBy from 'lodash/orderBy';
+
+import { BGGPlay } from '@/bgg/types';
 
 import { MostPlayedGame, Stats } from './types';
 
 interface CalculateStatsParams {
-  plays: BggPlaysPlayDto[];
+  plays: BGGPlay[];
   startDate: string;
   endDate: string;
   username: string;
@@ -30,7 +31,8 @@ export const calculateStats = ({
 
   for (let play of plays) {
     const date = play.date;
-    const game = play.item.objectid;
+    const game = parseInt(play.item.objectid, 10);
+    const length = parseInt(play.length, 10);
 
     if (date > endDate) {
       continue;
@@ -45,21 +47,21 @@ export const calculateStats = ({
           id: game,
           name: play.item.name,
           plays: 1,
-          minutesPlayed: play.length,
+          minutesPlayed: length,
         };
       } else {
         playsPerGame[game].plays += 1;
-        playsPerGame[game].minutesPlayed += play.length;
+        playsPerGame[game].minutesPlayed += length;
       }
 
-      const gamePlayers = play.players
+      const gamePlayers = play.players.player
         .filter((player) => player.username !== username)
         .map((player) => player.name);
       gamePlayers.forEach((player) => players.add(player));
 
       dates.add(play.date);
 
-      minutesSpent += play.length;
+      minutesSpent += length;
     }
   }
 

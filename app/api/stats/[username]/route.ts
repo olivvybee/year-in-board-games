@@ -2,8 +2,6 @@ import { fetchPlays } from '@/bgg/fetchPlays';
 import { calculateStats } from '@/stats/calculateStats';
 import { NextRequest } from 'next/server';
 
-// export const runtime = 'edge';
-
 interface RouteParams {
   username: string;
 }
@@ -27,7 +25,13 @@ export const GET = async (
   const endDate = !!month ? `${year}-${month}-31` : `${year}-12-31`;
 
   const plays = await fetchPlays(username, endDate);
-  const stats = calculateStats({ plays, startDate, endDate, sortBy, username });
+  const stats = calculateStats({
+    plays,
+    startDate,
+    endDate,
+    sortBy,
+    username,
+  });
 
   return new Response(JSON.stringify(stats, null, 2));
 };
