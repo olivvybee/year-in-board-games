@@ -1,11 +1,19 @@
-import { IoCopyOutline } from 'react-icons/io5';
+import { IoCopyOutline, IoSaveOutline, IoShareOutline } from 'react-icons/io5';
+import saveAs from 'file-saver';
 
 import { Stats } from '@/stats/types';
+import { useCopyToClipboard } from '@/utils/useCopyToClipboard';
+import { useNativeShare } from '@/utils/useNativeShare';
+import { createFileFromDataURL } from '@/utils/createFileFromDataUrl';
 
 import { Button } from '../Button';
 import { Expander } from '../Expander';
 
 import styles from './Sidebar.module.css';
+import { useMediaQuery } from '@/utils/useMediaQuery';
+import Link from 'next/link';
+
+const FILENAME = 'year-in-review';
 
 interface SidebarProps {
   stats: Stats;
@@ -13,11 +21,60 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ stats, imageData }: SidebarProps) => {
+  const isTouchDevice = useMediaQuery('(pointer: coarse)');
+
+  const [copiedText, copyToClipboard] = useCopyToClipboard();
+
+  const { isSharingSupported, share } = useNativeShare('image/png');
+  const shareImage = () => {
+    if (imageData) {
+      const shareData = {
+        file: createFileFromDataURL(imageData, FILENAME),
+      };
+      share({ data: shareData });
+    }
+  };
+
+  const downloadImage = () => {
+    if (imageData) {
+      saveAs(imageData, `${FILENAME}.png`);
+    }
+  };
+
   const altText = 'Beans';
 
   return (
     <div className={styles.sidebar}>
-      <p className={styles.helpText}>Beans</p>
+      <div className={styles.helpText}>
+        <p>
+          Use the {isSharingSupported ? 'buttons' : 'button'} below to share
+          your result, or {isTouchDevice ? 'tap and hold' : 'right click'} on
+          the image to copy or save it.
+        </p>
+        <p>
+          Want to change some of the options? <Link href="/">Go back</Link> and
+          generate another image.
+        </p>
+      </div>
+
+      <div className={styles.shareSection}>
+        {isSharingSupported && (
+          <Button
+            className={styles.button}
+            icon={IoShareOutline}
+            onClick={shareImage}
+            disabled={!!imageData}>
+            Share result
+          </Button>
+        )}
+        <Button
+          className={styles.button}
+          icon={IoSaveOutline}
+          onClick={downloadImage}
+          disabled={!!imageData}>
+          Save result
+        </Button>
+      </div>
 
       <div className={styles.spacer} />
 
@@ -25,9 +82,9 @@ export const Sidebar = ({ stats, imageData }: SidebarProps) => {
         <div className={styles.altTextTitle}>Suggested alt text</div>
         <Button
           icon={IoCopyOutline}
-          // onClick={() => copyToClipboard(altText || '')}
+          onClick={() => copyToClipboard(altText)}
           small={true}>
-          {/*!!copiedText ? 'Copied' :*/ 'Copy'}
+          {!!copiedText ? 'Copied' : 'Copy'}
         </Button>
       </div>
 
