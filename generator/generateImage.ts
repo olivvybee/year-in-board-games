@@ -83,18 +83,37 @@ export const generateImage = ({
   ctx.fillText('games played', midpoint, 350);
 
   const hours = Math.round(stats.minutesSpent / 60);
+  const usePlayerCount = stats.minutesSpent === 0;
 
   ctx.font = '140px Atkinson Hyperlegible';
   ctx.fillText(stats.plays.toString(), 245, 530);
   ctx.fillText(stats.newGames.toString(), 615, 530);
-  ctx.fillText(hours.toString(), 985, 530);
+  ctx.fillText(
+    usePlayerCount ? stats.players.toString() : hours.toString(),
+    985,
+    530
+  );
   ctx.fillText(stats.daysPlayed.toString(), 1355, 530);
 
   ctx.font = '40px Atkinson Hyperlegible';
-  ctx.fillText('Plays', 245, 670);
-  ctx.fillText('New games', 615, 670);
-  ctx.fillText('Hours', 985, 670);
-  ctx.fillText('Days played', 1355, 670);
+  ctx.fillText(stats.plays === 1 ? 'play' : 'plays', 245, 670);
+  ctx.fillText(stats.newGames === 1 ? 'new game' : 'new games', 615, 670);
+  ctx.fillText(
+    usePlayerCount
+      ? stats.players === 1
+        ? 'other player'
+        : 'other players'
+      : hours === 1
+      ? 'hour'
+      : 'hours',
+    985,
+    670
+  );
+  ctx.fillText(
+    stats.daysPlayed === 1 ? 'day played' : 'days played',
+    1355,
+    670
+  );
 
   ctx.font = '50px Atkinson Hyperlegible';
   ctx.fillText('Most played games', canvas.width / 2, 850);
