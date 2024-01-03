@@ -1,11 +1,14 @@
 import { BggPlaysPlayDto } from 'boardgamegeekclient/dist/esm/dto/concrete/subdto';
-import { Stats } from './types';
+import _orderBy from 'lodash/orderBy';
+
+import { MostPlayedGame, Stats } from './types';
 
 interface CalculateStatsParams {
   plays: BggPlaysPlayDto[];
   startDate: string;
   endDate: string;
   username: string;
+  sortBy: 'plays' | 'time';
 }
 
 export const calculateStats = ({
@@ -13,15 +16,16 @@ export const calculateStats = ({
   startDate,
   endDate,
   username,
+  sortBy,
 }: CalculateStatsParams): Stats => {
-  const playsPerGame: { [id: number]: number } = {};
+  const playsPerGame: { [id: number]: MostPlayedGame } = {};
 
   const gamesInDateRange = new Set<number>();
   const previouslySeenGames = new Set<number>();
 
   const players = new Set<string>();
   const dates = new Set<string>();
-  let timeSpent = 0;
+  let minutesSpent = 0;
   let playsInDateRange = 0;
 
   for (let play of plays) {
@@ -37,9 +41,15 @@ export const calculateStats = ({
       playsInDateRange += 1;
 
       if (playsPerGame[game] === undefined) {
-        playsPerGame[game] = 1;
+        playsPerGame[game] = {
+          id: game,
+          name: play.item.name,
+          plays: 1,
+          minutesPlayed: play.length,
+        };
       } else {
-        playsPerGame[game] += 1;
+        playsPerGame[game].plays += 1;
+        playsPerGame[game].minutesPlayed += play.length;
       }
 
       const gamePlayers = play.players
@@ -49,7 +59,7 @@ export const calculateStats = ({
 
       dates.add(play.date);
 
-      timeSpent += play.length;
+      minutesSpent += play.length;
     }
   }
 
@@ -57,14 +67,24 @@ export const calculateStats = ({
     (game) => !previouslySeenGames.has(game)
   );
 
-  const hours = Math.round(timeSpent / 60);
+  const sortParameters =
+    sortBy === 'plays'
+      ? ['plays', 'minutesPlayed', 'name']
+      : ['minutesPlayed', 'plays', 'name'];
+
+  const mostPlayedGames = _orderBy(
+    Object.values(playsPerGame),
+    sortParameters,
+    'desc'
+  ).slice(0, 10);
 
   return {
     gamesPlayed: gamesInDateRange.size,
     plays: playsInDateRange,
     newGames: newGames.length,
-    hoursSpent: hours,
+    minutesSpent,
     daysPlayed: dates.size,
     players: players.size,
+    mostPlayedGames,
   };
 };
