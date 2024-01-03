@@ -1,4 +1,5 @@
 import _orderBy from 'lodash/orderBy';
+import { decode as HTMLDecode } from 'html-entities';
 
 import { BGGPlay } from '@/bgg/types';
 
@@ -31,27 +32,28 @@ export const calculateStats = ({
 
   for (let play of plays) {
     const date = play.date;
-    const game = parseInt(play.item.objectid, 10);
+    const gameId = parseInt(play.item.objectid, 10);
+    const gameName = HTMLDecode(play.item.name);
     const length = parseInt(play.length, 10);
 
     if (date > endDate) {
       continue;
     } else if (date < startDate) {
-      previouslySeenGames.add(game);
+      previouslySeenGames.add(gameId);
     } else {
-      gamesInDateRange.add(game);
+      gamesInDateRange.add(gameId);
       playsInDateRange += 1;
 
-      if (playsPerGame[game] === undefined) {
-        playsPerGame[game] = {
-          id: game,
-          name: play.item.name,
+      if (playsPerGame[gameId] === undefined) {
+        playsPerGame[gameId] = {
+          id: gameId,
+          name: gameName,
           plays: 1,
           minutesPlayed: length,
         };
       } else {
-        playsPerGame[game].plays += 1;
-        playsPerGame[game].minutesPlayed += length;
+        playsPerGame[gameId].plays += 1;
+        playsPerGame[gameId].minutesPlayed += length;
       }
 
       const gamePlayers = play.players.player
