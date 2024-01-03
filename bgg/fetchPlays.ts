@@ -13,9 +13,14 @@ export interface BGGPlaysResponse {
   };
 }
 
-export const fetchPlays = async (username: string, endDate: string) => {
+export const fetchPlays = async (
+  username: string,
+  startDate: string,
+  endDate: string
+) => {
   const params = {
     username,
+    mindate: startDate,
     maxdate: endDate,
     subtype: 'boardgame',
   };

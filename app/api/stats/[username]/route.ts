@@ -24,11 +24,9 @@ export const GET = async (
   const startDate = !!month ? `${year}-${month}-01` : `${year}-01-01`;
   const endDate = !!month ? `${year}-${month}-31` : `${year}-12-31`;
 
-  const plays = await fetchPlays(username, endDate);
+  const plays = await fetchPlays(username, startDate, endDate);
   const stats = calculateStats({
     plays,
-    startDate,
-    endDate,
     sortBy,
     username,
   });
