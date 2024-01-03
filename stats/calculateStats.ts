@@ -8,7 +8,7 @@ interface CalculateStatsParams {
   startDate: string;
   endDate: string;
   username: string;
-  sortBy: 'plays' | 'time';
+  sortBy: string;
 }
 
 export const calculateStats = ({

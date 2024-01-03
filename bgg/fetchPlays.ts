@@ -1,24 +1,14 @@
 import { BggClient } from 'boardgamegeekclient';
 
-export const fetchPlays = async (
-  username: string,
-  startDate?: string,
-  endDate?: string
-) => {
+export const fetchPlays = async (username: string, endDate: string) => {
   const params = {
     username,
-    mindate: startDate,
     maxdate: endDate,
     subtype: 'boardgame',
   };
 
   const client = BggClient.Create();
-  const response = await client.play.query({
-    username,
-    mindate: startDate,
-    maxdate: endDate,
-    subtype: 'boardgame',
-  });
+  const response = await client.play.query(params);
 
   if (!response || !response.length) {
     throw new Error('No data returned from BGG');
