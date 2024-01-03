@@ -1,0 +1,14 @@
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+}

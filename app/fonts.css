@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Fredoka One';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''), url('/fonts/fredoka-one.woff2') format('woff2'),
+    url('/fonts/fredoka-one.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''), url('/fonts/Atkinson-HyperLegible.woff2') format('woff2'),
+    url('/fonts/Atkinson-HyperLegible.woff') format('woff');
+}
