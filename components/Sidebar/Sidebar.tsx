@@ -75,7 +75,7 @@ export const Sidebar = ({
             className={styles.button}
             icon={IoShareOutline}
             onClick={shareImage}
-            disabled={!!imageData}>
+            disabled={!imageData}>
             Share result
           </Button>
         )}
@@ -83,7 +83,7 @@ export const Sidebar = ({
           className={styles.button}
           icon={IoSaveOutline}
           onClick={downloadImage}
-          disabled={!!imageData}>
+          disabled={!imageData}>
           Save result
         </Button>
       </div>
