@@ -2,8 +2,8 @@ import { BggClient } from 'boardgamegeekclient';
 
 export const fetchPlays = async (
   username: string,
-  startDate: string,
-  endDate: string
+  startDate?: string,
+  endDate?: string
 ) => {
   const params = {
     username,
