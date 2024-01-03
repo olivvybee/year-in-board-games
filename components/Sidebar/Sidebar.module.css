@@ -37,6 +37,7 @@
 .altText {
   padding-top: 8px;
   margin: 0;
+  white-space: pre-wrap;
 }
 
 .altTextTitle {

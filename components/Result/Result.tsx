@@ -9,9 +9,13 @@ import { Sidebar } from '../Sidebar';
 
 interface ResultProps {
   stats: Stats;
+  username: string;
+  year: string;
+  month?: string;
+  sortBy: string;
 }
 
-export const Result = ({ stats }: ResultProps) => {
+export const Result = ({ stats, ...props }: ResultProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -29,7 +33,7 @@ export const Result = ({ stats }: ResultProps) => {
       <div className={styles.wrapper}>
         <img ref={imageRef} src={imageData} className={styles.outputImage} />
 
-        <Sidebar imageData={imageData} stats={stats} />
+        <Sidebar imageData={imageData} stats={stats} {...props} />
       </div>
 
       <canvas ref={canvasRef} className={styles.canvas} />

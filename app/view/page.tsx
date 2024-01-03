@@ -27,7 +27,15 @@ const ViewPage = async ({ searchParams }: ViewPageProps) => {
 
   const stats = await getStatsForUsername({ username, year, month, sortBy });
 
-  return <Result stats={stats} />;
+  return (
+    <Result
+      stats={stats}
+      username={username}
+      year={year}
+      month={month}
+      sortBy={sortBy}
+    />
+  );
 };
 
 export default ViewPage;

@@ -12,15 +12,27 @@ import { Expander } from '../Expander';
 import styles from './Sidebar.module.css';
 import { useMediaQuery } from '@/utils/useMediaQuery';
 import Link from 'next/link';
+import { generateAltText } from './generateAltText';
 
 const FILENAME = 'year-in-review';
 
 interface SidebarProps {
   stats: Stats;
+  username: string;
+  year: string;
+  month?: string;
+  sortBy: string;
   imageData?: string;
 }
 
-export const Sidebar = ({ stats, imageData }: SidebarProps) => {
+export const Sidebar = ({
+  imageData,
+  stats,
+  username,
+  year,
+  month,
+  sortBy,
+}: SidebarProps) => {
   const isTouchDevice = useMediaQuery('(pointer: coarse)');
 
   const [copiedText, copyToClipboard] = useCopyToClipboard();
@@ -41,7 +53,7 @@ export const Sidebar = ({ stats, imageData }: SidebarProps) => {
     }
   };
 
-  const altText = 'Beans';
+  const altText = generateAltText({ stats, username, year, month, sortBy });
 
   return (
     <div className={styles.sidebar}>
