@@ -1,3 +1,4 @@
+import { Result } from '@/components/Result';
 import { getStatsForUsername } from '@/stats/getStatsForUsername';
 
 interface ViewPageProps {
@@ -22,7 +23,7 @@ const ViewPage = async ({ searchParams }: ViewPageProps) => {
 
   const stats = await getStatsForUsername({ username, year, month, sortBy });
 
-  return <div>{JSON.stringify(stats, null, 2)}</div>;
+  return <Result stats={stats} />;
 };
 
 export default ViewPage;

@@ -1,0 +1,8 @@
+.canvas {
+  display: none;
+}
+
+.outputImage {
+  width: 100%;
+  height: auto;
+}
