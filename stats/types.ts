@@ -3,6 +3,7 @@ export interface MostPlayedGame {
   id: number;
   plays: number;
   minutesPlayed: number;
+  image?: string;
 }
 
 export interface Stats {

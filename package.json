@@ -13,6 +13,7 @@
     "fast-xml-parser": "^4.3.2",
     "file-saver": "^2.0.5",
     "html-entities": "^2.4.0",
+    "image-data-uri": "^2.0.1",
     "lodash": "^4.17.21",
     "next": "14.0.4",
     "react": "^18",

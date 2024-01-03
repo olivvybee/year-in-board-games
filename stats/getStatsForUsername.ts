@@ -1,4 +1,8 @@
+import imageDataURI from 'image-data-uri';
+
 import { fetchPlays } from '@/bgg/fetchPlays';
+import { fetchGames } from '@/bgg/fetchGames';
+
 import { calculateStatsFromPlays } from './calculateStatsFromPlays';
 
 interface Params {
@@ -31,6 +35,20 @@ export const getStatsForUsername = async ({
     sortBy,
     username,
   });
+
+  const mostPlayedGameIds = stats.mostPlayedGames.map((game) =>
+    game.id.toString()
+  );
+  const games = await fetchGames(mostPlayedGameIds);
+  await Promise.all(
+    mostPlayedGameIds.map(async (id, index) => {
+      const imageUrl = games.find((game) => game.id === id)?.image;
+      if (imageUrl) {
+        const dataUrl = await imageDataURI.encodeFromURL(imageUrl);
+        stats.mostPlayedGames[index].image = dataUrl;
+      }
+    })
+  );
 
   return stats;
 };

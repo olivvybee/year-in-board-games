@@ -15,20 +15,36 @@ interface ResultProps {
   sortBy: string;
 }
 
+const updateImageData = async (
+  props: ResultProps,
+  canvas: HTMLCanvasElement,
+  setImageData: (imageData: string) => void
+) => {
+  const newImageData = await generateImage({
+    canvas: canvas,
+    ...props,
+  });
+  setImageData(newImageData);
+};
+
 export const Result = ({ stats, ...props }: ResultProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
   const [imageData, setImageData] = useState<string>();
 
+  const updateImageData = async () => {
+    const newImageData = await generateImage({
+      canvas: canvasRef.current!,
+      stats,
+      ...props,
+    });
+    setImageData(newImageData);
+  };
+
   useEffect(() => {
     if (canvasRef.current && imageRef.current) {
-      const newImageData = generateImage({
-        canvas: canvasRef.current,
-        stats,
-        ...props,
-      });
-      setImageData(newImageData);
+      updateImageData();
     }
   }, [stats]);
 

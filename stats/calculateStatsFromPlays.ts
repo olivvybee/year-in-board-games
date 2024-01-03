@@ -70,7 +70,7 @@ export const calculateStatsFromPlays = ({
   const mostPlayedGames = _orderBy(
     Object.values(playsPerGame),
     sortParameters,
-    'desc'
+    ['desc', 'desc', 'asc']
   ).slice(0, 10);
 
   return {

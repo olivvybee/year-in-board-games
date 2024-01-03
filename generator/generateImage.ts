@@ -1,7 +1,10 @@
 'use client';
 
-import { Stats } from '@/stats/types';
+import { MostPlayedGame, Stats } from '@/stats/types';
 import { getMonthName } from '@/utils/getMonthName';
+import { drawImageFromDataUrl } from '@/utils/drawImageFromDataUrl';
+
+const BOX_ART_SIZE = 267;
 
 interface GenerateImageParams {
   canvas: HTMLCanvasElement;
@@ -12,7 +15,7 @@ interface GenerateImageParams {
   sortBy: string;
 }
 
-export const generateImage = ({
+export const generateImage = async ({
   canvas,
   stats,
   username,
@@ -26,7 +29,7 @@ export const generateImage = ({
   const ctx = canvas.getContext('2d');
   if (!ctx) {
     console.error('Failed to get canvas context');
-    return;
+    return '';
   }
 
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
@@ -126,16 +129,15 @@ export const generateImage = ({
   const leftEdge = 100;
   const rightEdge = canvas.width - 100;
   const availableSpace = rightEdge - leftEdge;
-  const boxArtSize = 267;
 
-  const spacing = (availableSpace - 5 * boxArtSize) / 4;
+  const spacing = (availableSpace - 5 * BOX_ART_SIZE) / 4;
 
   const topRowWidth =
-    topRowCount * boxArtSize + Math.max(0, topRowCount - 1) * spacing;
+    topRowCount * BOX_ART_SIZE + Math.max(0, topRowCount - 1) * spacing;
   const topRowStartX = leftEdge + (availableSpace - topRowWidth) / 2;
 
   const bottomRowWidth =
-    bottomRowCount * boxArtSize + Math.max(0, bottomRowCount - 1) * spacing;
+    bottomRowCount * BOX_ART_SIZE + Math.max(0, bottomRowCount - 1) * spacing;
   const bottomRowStartX = leftEdge + (availableSpace - bottomRowWidth) / 2;
 
   ctx.font = '36px Atkinson Hyperlegible';
@@ -146,70 +148,64 @@ export const generateImage = ({
 
   for (let i = 0; i < topRowCount; i++) {
     const game = stats.mostPlayedGames[i];
-
-    const x = topRowStartX + i * boxArtSize + i * spacing;
-    ctx.fillStyle = '#aaaaaa';
-    ctx.fillRect(x, 910, boxArtSize, boxArtSize);
-
-    const hours = Math.round(game.minutesPlayed / 60);
-    const amount = showPlays
-      ? `${game.plays} ${game.plays === 1 ? 'play' : 'plays'}`
-      : `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
-
-    const textX = x + boxArtSize / 2;
-    const { width: textWidth } = ctx.measureText(amount);
-
-    ctx.fillStyle = '#eeeeee';
-    ctx.shadowColor = 'black';
-    ctx.shadowBlur = 10;
-    ctx.beginPath();
-    ctx.roundRect(
-      textX - textWidth / 2 - 16,
-      910 + boxArtSize - 32,
-      textWidth + 32,
-      58,
-      10
-    );
-    ctx.fill();
-
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = 'black';
-    ctx.fillText(amount, textX, 910 + boxArtSize);
+    const x = topRowStartX + i * BOX_ART_SIZE + i * spacing;
+    await drawMostPlayed(ctx, game, x, 910, showPlays);
   }
 
   for (let i = 0; i < bottomRowCount; i++) {
     const game = stats.mostPlayedGames[i + topRowCount];
-
-    const x = bottomRowStartX + i * boxArtSize + i * spacing;
-    ctx.fillStyle = '#aaaaaa';
-    ctx.fillRect(x, 1235, boxArtSize, boxArtSize);
-
-    const hours = Math.round(game.minutesPlayed / 60);
-    const amount = showPlays
-      ? `${game.plays} ${game.plays === 1 ? 'play' : 'plays'}`
-      : `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
-
-    const textX = x + boxArtSize / 2;
-    const { width: textWidth } = ctx.measureText(amount);
-
-    ctx.fillStyle = '#eeeeee';
-    ctx.shadowColor = 'black';
-    ctx.shadowBlur = 10;
-    ctx.beginPath();
-    ctx.roundRect(
-      textX - textWidth / 2 - 16,
-      1235 + boxArtSize - 32,
-      textWidth + 32,
-      58,
-      10
-    );
-    ctx.fill();
-
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = 'black';
-    ctx.fillText(amount, textX, 1235 + boxArtSize);
+    const x = bottomRowStartX + i * BOX_ART_SIZE + i * spacing;
+    await drawMostPlayed(ctx, game, x, 1235, showPlays);
   }
 
   const imageData = canvas.toDataURL('image/png');
   return imageData;
+};
+
+const drawMostPlayed = async (
+  ctx: CanvasRenderingContext2D,
+  game: MostPlayedGame,
+  x: number,
+  y: number,
+  showPlays: boolean
+) => {
+  ctx.font = '36px Atkinson Hyperlegible';
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+
+  if (game.image) {
+    await drawImageFromDataUrl(
+      ctx,
+      game.image,
+      x,
+      y,
+      BOX_ART_SIZE,
+      BOX_ART_SIZE
+    );
+  }
+
+  const hours = Math.round(game.minutesPlayed / 60);
+  const amount = showPlays
+    ? `${game.plays} ${game.plays === 1 ? 'play' : 'plays'}`
+    : `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+
+  const textX = x + BOX_ART_SIZE / 2;
+  const { width: textWidth } = ctx.measureText(amount);
+
+  ctx.fillStyle = '#eeeeee';
+  ctx.shadowColor = 'black';
+  ctx.shadowBlur = 10;
+  ctx.beginPath();
+  ctx.roundRect(
+    textX - textWidth / 2 - 16,
+    y + BOX_ART_SIZE - 32,
+    textWidth + 32,
+    58,
+    10
+  );
+  ctx.fill();
+
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'black';
+  ctx.fillText(amount, textX, y + BOX_ART_SIZE);
 };

@@ -36,3 +36,15 @@ export interface BGGPlay {
   nowinstats: string;
   location: string;
 }
+
+export interface BGGGameName {
+  type: string;
+  sortindex: string;
+  value: string;
+}
+
+export interface BGGGame {
+  id: string;
+  image: string;
+  name: BGGGameName[];
+}
