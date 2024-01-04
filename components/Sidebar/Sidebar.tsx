@@ -15,6 +15,7 @@ import { useMediaQuery } from '@/utils/useMediaQuery';
 import Link from 'next/link';
 import { generateAltText } from './generateAltText';
 import { dataContext } from '@/context/DataContext';
+import { CropSelector } from '../CropSelector';
 
 const FILENAME = 'year-in-review';
 
@@ -134,6 +135,10 @@ export const Sidebar = ({ imageData }: SidebarProps) => {
           text so that they're accessible to everyone.
         </p>
       </Expander>
+
+      <div className={styles.spacer} />
+
+      <CropSelector />
     </div>
   );
 };

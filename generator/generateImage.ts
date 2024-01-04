@@ -4,6 +4,7 @@ import { MostPlayedGame, Stats } from '@/stats/types';
 import { getMonthName } from '@/utils/getMonthName';
 import { drawImageFromDataUrl } from '@/utils/drawImageFromDataUrl';
 import { loadFont } from '@/utils/loadFont';
+import { CropMode, CropSettings } from '@/components/CropSelector';
 
 const BOX_ART_SIZE = 267;
 
@@ -14,6 +15,7 @@ interface GenerateImageParams {
   year: string;
   month?: string;
   sortBy: string;
+  cropSettings?: CropSettings;
 }
 
 export const generateImage = async ({
@@ -23,6 +25,7 @@ export const generateImage = async ({
   year,
   month,
   sortBy,
+  cropSettings = {},
 }: GenerateImageParams) => {
   canvas.width = 1600;
   canvas.height = 1600;
@@ -152,14 +155,16 @@ export const generateImage = async ({
 
   for (let i = 0; i < topRowCount; i++) {
     const game = stats.mostPlayedGames[i];
+    const cropMode = cropSettings[game.id] || 'Fit';
     const x = topRowStartX + i * BOX_ART_SIZE + i * spacing;
-    await drawMostPlayed(ctx, game, x, 910, showPlays);
+    await drawMostPlayed(ctx, game, x, 910, showPlays, cropMode);
   }
 
   for (let i = 0; i < bottomRowCount; i++) {
     const game = stats.mostPlayedGames[i + topRowCount];
+    const cropMode = cropSettings[game.id] || 'Fit';
     const x = bottomRowStartX + i * BOX_ART_SIZE + i * spacing;
-    await drawMostPlayed(ctx, game, x, 1235, showPlays);
+    await drawMostPlayed(ctx, game, x, 1235, showPlays, cropMode);
   }
 
   const imageData = canvas.toDataURL('image/png');
@@ -171,11 +176,17 @@ const drawMostPlayed = async (
   game: MostPlayedGame,
   x: number,
   y: number,
-  showPlays: boolean
+  showPlays: boolean,
+  cropMode: CropMode
 ) => {
   ctx.font = '36px Atkinson Hyperlegible';
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'center';
+
+  ctx.fillStyle = 'white';
+  ctx.globalAlpha = 0.2;
+  ctx.fillRect(x, y, BOX_ART_SIZE, BOX_ART_SIZE);
+  ctx.globalAlpha = 1;
 
   if (game.image) {
     await drawImageFromDataUrl(
@@ -184,7 +195,8 @@ const drawMostPlayed = async (
       x,
       y,
       BOX_ART_SIZE,
-      BOX_ART_SIZE
+      BOX_ART_SIZE,
+      cropMode
     );
   }
 

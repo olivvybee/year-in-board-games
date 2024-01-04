@@ -1,5 +1,6 @@
 'use client';
 
+import { CropSettings } from '@/components/CropSelector';
 import { Stats } from '@/stats/types';
 import { createContext, useState } from 'react';
 
@@ -12,9 +13,12 @@ interface Params {
 
 export interface Data extends Params {
   stats: Stats;
+  cropSettings?: CropSettings;
 }
 
-export interface DataContext extends Data {}
+export interface DataContext extends Data {
+  setCropSettings: (settings: CropSettings) => void;
+}
 
 export const dataContext = createContext<DataContext>({
   username: '',
@@ -22,6 +26,8 @@ export const dataContext = createContext<DataContext>({
   month: '',
   sortBy: '',
   stats: {} as any,
+  cropSettings: undefined,
+  setCropSettings: () => {},
 });
 
 interface DataContextProviderProps {
@@ -35,8 +41,11 @@ export const DataContextProvider = ({
   params,
   stats,
 }: DataContextProviderProps) => {
+  const [cropSettings, setCropSettings] = useState<CropSettings>();
+
   return (
-    <dataContext.Provider value={{ ...params, stats }}>
+    <dataContext.Provider
+      value={{ ...params, stats, cropSettings, setCropSettings }}>
       {children}
     </dataContext.Provider>
   );
