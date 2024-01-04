@@ -10,6 +10,6 @@
   font-family: 'Atkinson Hyperlegible';
   font-style: normal;
   font-weight: 400;
-  src: local(''), url('/fonts/Atkinson-HyperLegible.woff2') format('woff2'),
-    url('/fonts/Atkinson-HyperLegible.woff') format('woff');
+  src: local(''), url('/fonts/Atkinson-Hyperlegible.woff2') format('woff2'),
+    url('/fonts/Atkinson-Hyperlegible.woff') format('woff');
 }

@@ -1,6 +1,6 @@
 export const loadFont = async (
   name: string = 'Atkinson Hyperlegible',
-  url: string = '/fonts/Atkinson-Hyperlegible-Regular.woff2'
+  url: string = '/fonts/Atkinson-Hyperlegible.woff2'
 ) => {
   const font = new FontFace(name, `url("${url}")`);
   await font.load();
