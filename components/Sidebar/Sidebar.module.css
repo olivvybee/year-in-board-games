@@ -34,17 +34,17 @@
   margin-top: 16px;
 }
 
-.altText {
-  padding-top: 8px;
-  margin: 0;
-  white-space: pre-wrap;
-}
-
-.altTextTitle {
+.sectionTitle {
   display: block;
   font-size: 1.1rem;
   font-weight: bold;
   margin-right: 16px;
+}
+
+.altText {
+  padding-top: 8px;
+  margin: 0;
+  white-space: pre-wrap;
 }
 
 .altTextTitleWrapper {

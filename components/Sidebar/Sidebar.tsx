@@ -84,7 +84,7 @@ export const Sidebar = ({ imageData }: SidebarProps) => {
       <div className={styles.spacer} />
 
       <div className={styles.altTextTitleWrapper}>
-        <div className={styles.altTextTitle}>Suggested alt text</div>
+        <div className={styles.sectionTitle}>Suggested alt text</div>
         <Button
           icon={IoCopyOutline}
           onClick={() => copyToClipboard(altText)}
@@ -137,6 +137,9 @@ export const Sidebar = ({ imageData }: SidebarProps) => {
       </Expander>
 
       <div className={styles.spacer} />
+
+      <span className={styles.sectionTitle}>Crop images</span>
+      <p>Choose how to crop box art images that aren't square.</p>
 
       <CropSelector />
     </div>

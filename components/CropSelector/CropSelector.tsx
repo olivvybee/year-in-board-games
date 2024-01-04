@@ -3,6 +3,10 @@ import { useContext, useEffect } from 'react';
 import { MostPlayedGame } from '@/stats/types';
 import { dataContext } from '@/context/DataContext';
 
+import { CropSelectorItem } from './CropSelectorItem';
+
+import styles from './CropSelector.module.css';
+
 export type CropMode =
   | 'Fit'
   | 'FillCenter'
@@ -11,7 +15,7 @@ export type CropMode =
   | 'FillTop'
   | 'FillBottom';
 
-export type CropSettings = { [gameId: string]: CropMode };
+export type CropSettings = { [gameId: number]: CropMode };
 
 const buildInitialState = (games: MostPlayedGame[]): CropSettings =>
   games.reduce((processed, game) => ({ ...processed, [game.id]: 'Fit' }), {});
@@ -26,18 +30,29 @@ export const CropSelector = () => {
     setCropSettings(initialState);
   }, [games]);
 
-  const setModeForGame = (gameId: string, mode: CropMode) => {
+  const setModeForGame = (gameId: number, mode: CropMode) => {
     const newResults = { ...cropSettings, [gameId]: mode };
     setCropSettings(newResults);
   };
 
-  return (
-    <div>
-      <p>Crop selector</p>
+  if (!cropSettings) {
+    return null;
+  }
 
-      {games.map((game) => (
-        <p>{game.name}</p>
-      ))}
+  return (
+    <div className={styles.cropSelector}>
+      {games
+        .filter((game) => !!game.image)
+        .map((game) => (
+          <CropSelectorItem
+            gameId={game.id}
+            gameName={game.name}
+            imageUrl={game.image!}
+            mode={cropSettings[game.id]}
+            onChange={(mode) => setModeForGame(game.id, mode)}
+            key={game.id}
+          />
+        ))}
     </div>
   );
 };

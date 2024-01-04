@@ -4,6 +4,7 @@ import { fetchPlays } from '@/bgg/fetchPlays';
 import { fetchGames } from '@/bgg/fetchGames';
 
 import { calculateStatsFromPlays } from './calculateStatsFromPlays';
+import { getImageSize } from '@/utils/getImageSize';
 
 interface Params {
   username: string;

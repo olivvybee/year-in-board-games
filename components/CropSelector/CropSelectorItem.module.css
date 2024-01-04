@@ -1,0 +1,31 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.wrapper.hidden {
+  display: none;
+}
+
+.canvas {
+  display: none;
+}
+
+.preview {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-width: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+}
+
+.gameName {
+  font-size: 0.9rem;
+}

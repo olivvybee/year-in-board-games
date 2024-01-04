@@ -1,3 +1,8 @@
+export interface ImageSize {
+  width: number;
+  height: number;
+}
+
 export interface MostPlayedGame {
   name: string;
   id: number;
