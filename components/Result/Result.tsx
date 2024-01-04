@@ -2,7 +2,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
 import { generateImage } from '@/generator/generateImage';
-import { Stats } from '@/stats/types';
 
 import styles from './Result.module.css';
 import { Sidebar } from '../Sidebar';
@@ -14,18 +13,22 @@ export const Result = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
+  const updating = useRef<boolean>(false);
+
   const [imageData, setImageData] = useState<string>();
 
   const updateImageData = async () => {
+    updating.current = true;
     const newImageData = await generateImage({
       canvas: canvasRef.current!,
       ...data,
     });
     setImageData(newImageData);
+    updating.current = false;
   };
 
   useEffect(() => {
-    if (canvasRef.current && imageRef.current) {
+    if (canvasRef.current && imageRef.current && !updating.current) {
       updateImageData();
     }
   }, [data]);
