@@ -8,9 +8,9 @@ export const Footer = () => (
         <a rel="me" href="https://fedi.beehive.gay/@olivvybee">
           olivvybee
         </a>
-        . Support her and the site on{' '}
-        <a href="https://ko-fi.com/olivvybee">ko-fi</a>. Report issues and
-        suggestions on{' '}
+        . Help keep the site running by{' '}
+        <a href="https://ko-fi.com/olivvybee">donating on ko-fi</a>. Report
+        issues and suggestions on{' '}
         <a href="https://github.com/olivvybee/year-in-board-games">github</a>.
         Data provided by <a href="https://boardgamegeek.com">BoardGameGeek</a>.
       </span>
