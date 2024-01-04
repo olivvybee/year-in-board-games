@@ -7,7 +7,7 @@ export const Navbar = () => {
     <header className={styles.navbar}>
       <div className={styles.navbarContent}>
         <Link href="/" className={styles.homeLink}>
-          <span className={styles.siteName}>Board game generator thingy</span>
+          <span className={styles.siteName}>Year In Board Games</span>
         </Link>
       </div>
     </header>

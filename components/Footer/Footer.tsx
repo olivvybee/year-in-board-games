@@ -4,7 +4,7 @@ export const Footer = () => (
   <footer className={styles.footer}>
     <div className={styles.footerContent}>
       <span>
-        Board game generator thingy by{' '}
+        YIBG was created by{' '}
         <a rel="me" href="https://fedi.beehive.gay/@olivvybee">
           olivvybee
         </a>
@@ -12,6 +12,7 @@ export const Footer = () => (
         <a href="https://ko-fi.com/olivvybee">ko-fi</a>. Report issues and
         suggestions on{' '}
         <a href="https://github.com/olivvybee/year-in-board-games">github</a>.
+        Data provided by <a href="https://boardgamegeek.com">BoardGameGeek</a>.
       </span>
     </div>
   </footer>
