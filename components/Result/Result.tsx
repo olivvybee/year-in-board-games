@@ -6,6 +6,7 @@ import { generateImage } from '@/generator/generateImage';
 import styles from './Result.module.css';
 import { Sidebar } from '../Sidebar';
 import { dataContext } from '@/context/DataContext';
+import classNames from 'classnames';
 
 export const Result = () => {
   const data = useContext(dataContext);
@@ -36,8 +37,11 @@ export const Result = () => {
   return (
     <>
       <div className={styles.wrapper}>
-        <img ref={imageRef} src={imageData} className={styles.outputImage} />
-
+        <img
+          ref={imageRef}
+          src={imageData || '/placeholder.jpg'}
+          className={styles.outputImage}
+        />
         <Sidebar imageData={imageData} />
       </div>
 
