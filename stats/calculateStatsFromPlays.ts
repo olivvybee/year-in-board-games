@@ -45,7 +45,7 @@ export const calculateStatsFromPlays = ({
     }
 
     const self = play.players.player.find(
-      (player) => player.username === username
+      (player) => player.username.toLowerCase() === username.toLowerCase()
     );
     const isNew = self?.new === '1';
     if (isNew) {
@@ -53,7 +53,9 @@ export const calculateStatsFromPlays = ({
     }
 
     const otherPlayers = play.players.player
-      .filter((player) => player.username !== username)
+      .filter(
+        (player) => player.username.toLowerCase() !== username.toLowerCase()
+      )
       .map((player) => player.name);
     otherPlayers.forEach((player) => players.add(player));
 
