@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { IoCopyOutline, IoSaveOutline, IoShareOutline } from 'react-icons/io5';
 import saveAs from 'file-saver';
 
@@ -13,26 +14,17 @@ import styles from './Sidebar.module.css';
 import { useMediaQuery } from '@/utils/useMediaQuery';
 import Link from 'next/link';
 import { generateAltText } from './generateAltText';
+import { dataContext } from '@/context/DataContext';
 
 const FILENAME = 'year-in-review';
 
 interface SidebarProps {
-  stats: Stats;
-  username: string;
-  year: string;
-  month?: string;
-  sortBy: string;
   imageData?: string;
 }
 
-export const Sidebar = ({
-  imageData,
-  stats,
-  username,
-  year,
-  month,
-  sortBy,
-}: SidebarProps) => {
+export const Sidebar = ({ imageData }: SidebarProps) => {
+  const { stats, username, year, month, sortBy } = useContext(dataContext);
+
   const isTouchDevice = useMediaQuery('(pointer: coarse)');
 
   const [copiedText, copyToClipboard] = useCopyToClipboard();

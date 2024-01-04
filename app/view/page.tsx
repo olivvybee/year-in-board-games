@@ -1,9 +1,7 @@
 import { Result } from '@/components/Result';
 import { getStatsForUsername } from '@/stats/getStatsForUsername';
 
-import styles from './page.module.css';
-import { Sidebar } from '@/components/Sidebar';
-import { useState } from 'react';
+import { DataContextProvider } from '@/context/DataContext';
 
 interface ViewPageProps {
   searchParams: {
@@ -25,16 +23,14 @@ const ViewPage = async ({ searchParams }: ViewPageProps) => {
     return <div>BEANS</div>;
   }
 
-  const stats = await getStatsForUsername({ username, year, month, sortBy });
+  const params = { username, year, month, sortBy };
+
+  const stats = await getStatsForUsername(params);
 
   return (
-    <Result
-      stats={stats}
-      username={username}
-      year={year}
-      month={month}
-      sortBy={sortBy}
-    />
+    <DataContextProvider params={params} stats={stats}>
+      <Result />
+    </DataContextProvider>
   );
 };
 
