@@ -38,6 +38,8 @@ export const generateImage = async ({
 
   await loadFont();
 
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
   gradient.addColorStop(0, '#e7504b');
   gradient.addColorStop(0.2, '#ed9456');
