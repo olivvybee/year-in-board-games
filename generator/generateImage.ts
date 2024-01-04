@@ -60,6 +60,7 @@ export const generateImage = async ({
   ctx.globalAlpha = 1;
   ctx.fillStyle = 'white';
   ctx.textBaseline = 'top';
+  ctx.textAlign = 'left';
 
   ctx.font = '80px Atkinson Hyperlegible';
   ctx.fillText(`${username}'s`, 100, 100);
