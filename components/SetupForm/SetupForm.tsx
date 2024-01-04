@@ -1,6 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import classNames from 'classnames';
 
 import { getMonthName } from '@/utils/getMonthName';
 
@@ -22,8 +23,16 @@ export const SetupForm = () => {
   const [month, setMonth] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('plays');
 
+  const usernameIsValid = !!username;
+
+  const parsedYear = parseInt(year, 10);
+  const yearIsValid =
+    !isNaN(parsedYear) && parsedYear >= 2000 && parsedYear <= thisYear;
+
+  const maxMonth = !yearIsValid || parsedYear < thisYear ? 12 : thisMonth + 1;
+
   const monthOptions: Option<string>[] = [{ value: '', label: 'Entire year' }];
-  for (let m = 1; m <= 12; m++) {
+  for (let m = 1; m <= maxMonth; m++) {
     const monthAsString = m.toString();
     monthOptions.push({
       value: monthAsString,
@@ -31,12 +40,19 @@ export const SetupForm = () => {
     });
   }
 
+  useEffect(() => {
+    const selectedMonth = parseInt(month, 10);
+    if (!isNaN(selectedMonth) && selectedMonth > maxMonth) {
+      setMonth('');
+    }
+  }, [month, maxMonth]);
+
   const onSubmit = () => {
     const params = new URLSearchParams({
       username,
       year,
-      month,
       sortBy,
+      ...(!!month ? { month } : {}),
     });
 
     const newUrl = `/view?${params.toString()}`;
@@ -63,9 +79,16 @@ export const SetupForm = () => {
           min={2000}
           max={thisYear}
           value={year}
-          onChange={(e) => setYear(e.target.value)}
-          className={styles.textField}
+          onChange={(e) => setYear(e.target.value.trim())}
+          className={classNames(styles.textField, {
+            [styles.invalid]: !yearIsValid,
+          })}
         />
+        {!yearIsValid && (
+          <span className={styles.errorMessage}>
+            Year must be a number between 2000 and {thisYear}.
+          </span>
+        )}
       </div>
 
       <div className={styles.formElement}>
@@ -109,7 +132,9 @@ export const SetupForm = () => {
         </div>
       </div>
 
-      <Button onClick={onSubmit}>Generate</Button>
+      <Button onClick={onSubmit} disabled={!usernameIsValid || !yearIsValid}>
+        Generate
+      </Button>
     </form>
   );
 };

@@ -29,6 +29,15 @@
     'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
+.textField.invalid {
+  border: 1px solid #e7504b;
+}
+
+.errorMessage {
+  font-size: 0.9rem;
+  color: #e7504b;
+}
+
 .radioGroup {
   display: flex;
   flex-direction: column;
