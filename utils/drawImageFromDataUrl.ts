@@ -5,27 +5,107 @@ export const drawImageFromDataUrl = async (
   dataUrl: string,
   x: number,
   y: number,
-  w: number,
-  h: number,
+  targetSize: number,
   cropMode: CropMode
 ) => {
   const image = new Image();
 
   return new Promise<void>((resolve) => {
     image.onload = () => {
-      const { width, height } = image;
+      const { naturalWidth: width, naturalHeight: height } = image;
 
-      if (width > height) {
-        const ratio = height / width;
-        const yOffset = h * (1 - ratio);
-        ctx.drawImage(image, x, y + yOffset, w, h * ratio);
-      } else if (height > width) {
-        const ratio = width / height;
-        const xOffset = (w * (1 - ratio)) / 2;
-        ctx.drawImage(image, x + xOffset, y, w * ratio, h);
-      } else {
-        ctx.drawImage(image, x, y, w, h);
+      if (cropMode === 'Fit') {
+        if (width > height) {
+          const ratio = height / width;
+          const yOffset = (targetSize * (1 - ratio)) / 2;
+          ctx.drawImage(image, x, y + yOffset, targetSize, targetSize * ratio);
+        } else if (height > width) {
+          const ratio = width / height;
+          const xOffset = (targetSize * (1 - ratio)) / 2;
+          ctx.drawImage(image, x + xOffset, y, targetSize * ratio, targetSize);
+        } else {
+          ctx.drawImage(image, x, y, targetSize, targetSize);
+        }
       }
+
+      if (cropMode === 'FillCenter' && height > width) {
+        const yStart = (height - width) / 2;
+        ctx.drawImage(
+          image,
+          0,
+          yStart,
+          width,
+          width,
+          x,
+          y,
+          targetSize,
+          targetSize
+        );
+      }
+
+      if (cropMode === 'FillCenter' && width > height) {
+        const xStart = (width - height) / 2;
+        ctx.drawImage(
+          image,
+          xStart,
+          0,
+          height,
+          height,
+          x,
+          y,
+          targetSize,
+          targetSize
+        );
+      }
+
+      if (cropMode === 'FillTop') {
+        ctx.drawImage(image, 0, 0, width, width, x, y, targetSize, targetSize);
+      }
+
+      if (cropMode === 'FillBottom') {
+        const yStart = height - width;
+        ctx.drawImage(
+          image,
+          0,
+          yStart,
+          width,
+          width,
+          x,
+          y,
+          targetSize,
+          targetSize
+        );
+      }
+
+      if (cropMode === 'FillLeft') {
+        ctx.drawImage(
+          image,
+          0,
+          0,
+          height,
+          height,
+          x,
+          y,
+          targetSize,
+          targetSize
+        );
+      }
+
+      if (cropMode === 'FillRight') {
+        const xStart = width - height;
+        ctx.drawImage(
+          image,
+          xStart,
+          0,
+          height,
+          height,
+          x,
+          y,
+          targetSize,
+          targetSize
+        );
+      }
+
       resolve();
     };
 

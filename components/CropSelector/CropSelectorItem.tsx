@@ -64,7 +64,7 @@ export const CropSelectorItem = ({
       return;
     }
 
-    await drawImageFromDataUrl(ctx, imageUrl, 0, 0, 64, 64, mode);
+    await drawImageFromDataUrl(ctx, imageUrl, 0, 0, 64, mode);
 
     const previewData = canvas.toDataURL();
     imageRef.current.src = previewData;

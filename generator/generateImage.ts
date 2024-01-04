@@ -189,15 +189,7 @@ const drawMostPlayed = async (
   ctx.globalAlpha = 1;
 
   if (game.image) {
-    await drawImageFromDataUrl(
-      ctx,
-      game.image,
-      x,
-      y,
-      BOX_ART_SIZE,
-      BOX_ART_SIZE,
-      cropMode
-    );
+    await drawImageFromDataUrl(ctx, game.image, x, y, BOX_ART_SIZE, cropMode);
   }
 
   const hours = Math.round(game.minutesPlayed / 60);
