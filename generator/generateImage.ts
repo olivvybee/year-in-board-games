@@ -3,6 +3,7 @@
 import { MostPlayedGame, Stats } from '@/stats/types';
 import { getMonthName } from '@/utils/getMonthName';
 import { drawImageFromDataUrl } from '@/utils/drawImageFromDataUrl';
+import { loadFont } from '@/utils/loadFont';
 
 const BOX_ART_SIZE = 267;
 
@@ -31,6 +32,8 @@ export const generateImage = async ({
     console.error('Failed to get canvas context');
     return '';
   }
+
+  await loadFont();
 
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
   gradient.addColorStop(0, '#e7504b');
