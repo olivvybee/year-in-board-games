@@ -40,9 +40,10 @@ export const getStatsForUsername = async ({
     game.id.toString()
   );
   const games = await fetchGames(mostPlayedGameIds);
+
   await Promise.all(
     mostPlayedGameIds.map(async (id, index) => {
-      const imageUrl = games.find((game) => game.id === id)?.image;
+      const imageUrl = games.find((game) => game.id === id)?.thumbnail;
       if (imageUrl) {
         const dataUrl = await imageDataURI.encodeFromURL(imageUrl);
         stats.mostPlayedGames[index].image = dataUrl;

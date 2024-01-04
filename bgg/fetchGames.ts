@@ -1,7 +1,7 @@
 import { XMLParser } from 'fast-xml-parser';
 
 import { BASE_URL } from './constants';
-import { BGGGame } from './types';
+import { BGGGame, Game } from './types';
 
 export interface BGGGamesResponse {
   items: {
@@ -9,7 +9,7 @@ export interface BGGGamesResponse {
   };
 }
 
-export const fetchGames = async (gameIds: string[]) => {
+export const fetchGames = async (gameIds: string[]): Promise<Game[]> => {
   const params = {
     id: gameIds.join(','),
     thing: 'boardgame',
@@ -24,8 +24,9 @@ export const fetchGames = async (gameIds: string[]) => {
   return (
     response.items.item?.map((game) => ({
       id: game.id,
-      name: game.name.find((name) => name.type === 'primary')?.value,
+      name: game.name.find((name) => name.type === 'primary')!.value,
       image: game.image,
+      thumbnail: game.thumbnail,
     })) || []
   );
 };

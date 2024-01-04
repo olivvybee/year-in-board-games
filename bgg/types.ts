@@ -46,5 +46,13 @@ export interface BGGGameName {
 export interface BGGGame {
   id: string;
   image: string;
+  thumbnail: string;
   name: BGGGameName[];
+}
+
+export interface Game {
+  id: string;
+  name: string;
+  image: string;
+  thumbnail: string;
 }
