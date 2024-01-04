@@ -1,13 +1,17 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { getMonthName } from '@/utils/getMonthName';
 
 import { Dropdown, Option } from '../Dropdown';
-
-import styles from './SetupForm.module.css';
-import { getMonthName } from '@/utils/getMonthName';
 import { Button } from '../Button';
 
+import styles from './SetupForm.module.css';
+
 export const SetupForm = () => {
+  const router = useRouter();
+
   const now = new Date();
   const thisYear = now.getFullYear();
   const thisMonth = now.getMonth();
@@ -27,7 +31,18 @@ export const SetupForm = () => {
     });
   }
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    const params = new URLSearchParams({
+      username,
+      year,
+      month,
+      sortBy,
+    });
+
+    const newUrl = `/view?${params.toString()}`;
+
+    router.push(newUrl);
+  };
 
   return (
     <form className={styles.form}>
