@@ -13,16 +13,27 @@ export interface BGGPlaysResponse {
   };
 }
 
-export const fetchPlays = async (
-  username: string,
-  startDate: string,
-  endDate: string
-) => {
+interface FetchPlaysParams {
+  username: string;
+  startDate?: string;
+  endDate: string;
+  includeExpansions: boolean;
+}
+
+const getPlaySubtypes = (play: BGGPlay) =>
+  play.item.subtypes.subtype.map((subtype) => subtype.value);
+
+export const fetchPlays = async ({
+  username,
+  startDate,
+  endDate,
+  includeExpansions,
+}: FetchPlaysParams) => {
   const params = {
     username,
-    mindate: startDate,
     maxdate: endDate,
     subtype: 'boardgame',
+    ...(!!startDate ? { mindate: startDate } : {}),
   };
 
   const response = await makeRequest('plays', params);
@@ -49,13 +60,19 @@ export const fetchPlays = async (
     plays = plays.concat(pageResponse.plays.play || []);
   }
 
-  const filteredPlays = plays.filter(
-    (play) =>
-      parseInt(play.quantity, 10) >= 1 &&
-      !play.item.subtypes.subtype.some(
-        (type) => type.value === 'boardgameexpansion'
-      )
+  const playsWithNonZeroQuantity = plays.filter(
+    (play) => parseInt(play.quantity, 10) >= 1
   );
+
+  const filteredPlays = includeExpansions
+    ? playsWithNonZeroQuantity
+    : playsWithNonZeroQuantity.filter((play) => {
+        const subtypes = getPlaySubtypes(play);
+        return (
+          !subtypes.includes('boardgameexpansion') ||
+          subtypes.includes('boardgameintegration')
+        );
+      });
 
   return filteredPlays;
 };

@@ -16,12 +16,19 @@ export const GET = async (
   const year = query.get('year');
   const month = query.get('month') || undefined;
   const sortBy = query.get('sortBy') || 'plays';
+  const includeExpansions = query.get('includeExpansions') === 'true';
 
   if (!year) {
     return new Response(`Missing required parameter 'year'`);
   }
 
-  const stats = await getStatsForUsername({ username, year, month, sortBy });
+  const stats = await getStatsForUsername({
+    username,
+    year,
+    month,
+    sortBy,
+    includeExpansions,
+  });
 
   return new Response(JSON.stringify(stats, null, 2));
 };

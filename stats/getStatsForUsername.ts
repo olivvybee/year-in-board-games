@@ -11,6 +11,7 @@ interface Params {
   year: string;
   month?: string;
   sortBy?: string;
+  includeExpansions?: boolean;
 }
 
 export const getStatsForUsername = async ({
@@ -18,6 +19,7 @@ export const getStatsForUsername = async ({
   year,
   month,
   sortBy = 'plays',
+  includeExpansions = false,
 }: Params) => {
   if (!username) {
     throw new Error("Missing parameter 'username'");
@@ -30,7 +32,12 @@ export const getStatsForUsername = async ({
   const startDate = !!month ? `${year}-${month}-01` : `${year}-01-01`;
   const endDate = !!month ? `${year}-${month}-31` : `${year}-12-31`;
 
-  const plays = await fetchPlays(username, startDate, endDate);
+  const plays = await fetchPlays({
+    username,
+    startDate,
+    endDate,
+    includeExpansions,
+  });
   const stats = calculateStatsFromPlays({
     plays,
     sortBy,
