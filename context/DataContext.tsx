@@ -9,6 +9,7 @@ interface Params {
   year: string;
   month?: string;
   sortBy: string;
+  includeExpansions: boolean;
 }
 
 export interface Data extends Params {
@@ -26,6 +27,7 @@ export const dataContext = createContext<DataContext>({
   month: '',
   sortBy: '',
   stats: {} as any,
+  includeExpansions: false,
   cropSettings: undefined,
   setCropSettings: () => {},
 });

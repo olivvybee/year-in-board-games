@@ -9,6 +9,7 @@ import { Dropdown, Option } from '../Dropdown';
 import { Button } from '../Button';
 
 import styles from './SetupForm.module.css';
+import { Expander } from '../Expander';
 
 export const SetupForm = () => {
   const router = useRouter();
@@ -22,6 +23,7 @@ export const SetupForm = () => {
   const [year, setYear] = useState<string>(defaultYear.toString());
   const [month, setMonth] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('plays');
+  const [includeExpansions, setIncludeExpansions] = useState<boolean>(false);
 
   const usernameIsValid = !!username;
 
@@ -52,6 +54,7 @@ export const SetupForm = () => {
       username,
       year,
       sortBy,
+      includeExpansions: includeExpansions.toString(),
       ...(!!month ? { month } : {}),
     });
 
@@ -134,6 +137,54 @@ export const SetupForm = () => {
           </div>
         </div>
       </div>
+
+      <Expander
+        renderTrigger={(toggle) => (
+          <div className={styles.formElement}>
+            <div className={styles.checkboxWrapper}>
+              <input
+                type="checkbox"
+                id="includeExpansions"
+                checked={includeExpansions}
+                onChange={(e) => setIncludeExpansions(e.target.checked)}
+              />
+              <label htmlFor="includeExpansions">Include expansions</label>
+              <a
+                className={styles.expanderTrigger}
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggle();
+                }}>
+                What's this?
+              </a>
+            </div>
+          </div>
+        )}>
+        <div className={styles.expansionExplanation}>
+          <p>
+            Use this option if you want to include plays of expansions separate
+            to the base game. This is useful if you record plays based on the
+            expansion, such as logging a specific Arkham Horror expansion to
+            signify you played that specific campaign.
+          </p>
+          <p>
+            {' '}
+            BGG does not have a way to log expansions and base games as part of
+            the same play, so this may end up double-counting some plays. It's
+            recommended not to create separately logged plays for expansions
+            because of this, or log expansions with a quantity of 0.1 when
+            logging the base game as well.
+          </p>
+          <p>
+            Standalone expansions (e.g. Wingspan Asia) will still be counted
+            even if this option is disabled, because there is no way to
+            differentiate a standalone expansion played by itself or integrated
+            with the base game. To avoid this, only log these expansions when
+            played standalone.
+          </p>
+        </div>
+      </Expander>
 
       <Button onClick={onSubmit} disabled={!usernameIsValid || !yearIsValid}>
         Generate

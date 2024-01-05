@@ -10,11 +10,18 @@ interface ViewPageProps {
     year?: string;
     month?: string;
     sortBy?: string;
+    includeExpansions?: string;
   };
 }
 
 const ViewPage = async ({ searchParams }: ViewPageProps) => {
-  const { username, year, month, sortBy = 'plays' } = searchParams;
+  const {
+    username,
+    year,
+    month,
+    sortBy = 'plays',
+    includeExpansions = 'false',
+  } = searchParams;
 
   if (!username && !year) {
     return (
@@ -41,7 +48,13 @@ const ViewPage = async ({ searchParams }: ViewPageProps) => {
     );
   }
 
-  const params = { username, year, month, sortBy };
+  const params = {
+    username,
+    year,
+    month,
+    sortBy,
+    includeExpansions: includeExpansions === 'true',
+  };
 
   const stats = await getStatsForUsername(params);
 
