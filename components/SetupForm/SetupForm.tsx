@@ -10,6 +10,7 @@ import { Button } from '../Button';
 
 import styles from './SetupForm.module.css';
 import { Expander } from '../Expander';
+import { IoHelpCircleOutline } from 'react-icons/io5';
 
 export const SetupForm = () => {
   const router = useRouter();
@@ -156,7 +157,7 @@ export const SetupForm = () => {
                   e.preventDefault();
                   toggle();
                 }}>
-                What's this?
+                <IoHelpCircleOutline /> What's this?
               </a>
             </div>
           </div>
