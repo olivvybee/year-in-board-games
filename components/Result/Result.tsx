@@ -7,6 +7,7 @@ import styles from './Result.module.css';
 import { Sidebar } from '../Sidebar';
 import { dataContext } from '@/context/DataContext';
 import classNames from 'classnames';
+import { MessageBanner } from '../MessageBanner';
 
 export const Result = () => {
   const data = useContext(dataContext);
@@ -34,8 +35,18 @@ export const Result = () => {
     }
   }, [data]);
 
+  const showHoursWarning =
+    data.stats.playsWithoutDuration > data.stats.plays * 0.4;
+
   return (
     <>
+      {showHoursWarning && (
+        <MessageBanner severity="warning" className={styles.banner}>
+          A large number of your plays don't have the duration saved. The number
+          of hours in your image will be inaccurate.
+        </MessageBanner>
+      )}
+
       <div className={styles.wrapper}>
         <img
           ref={imageRef}

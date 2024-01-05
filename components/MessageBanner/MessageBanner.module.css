@@ -1,0 +1,13 @@
+.banner {
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.banner.error {
+  background-color: #e12923;
+}
+
+.banner.warning {
+  background-color: #e4c15c;
+  color: #000000;
+}

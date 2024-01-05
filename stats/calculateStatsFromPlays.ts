@@ -23,6 +23,7 @@ export const calculateStatsFromPlays = ({
   const players = new Set<string>();
   const dates = new Set<string>();
   let minutesSpent = 0;
+  let playsWithoutDuration = 0;
   let newGames = 0;
 
   for (let play of plays) {
@@ -62,6 +63,10 @@ export const calculateStatsFromPlays = ({
     dates.add(play.date);
 
     minutesSpent += length;
+
+    if (length === 0) {
+      playsWithoutDuration += 1;
+    }
   }
 
   const sortParameters =
@@ -80,6 +85,7 @@ export const calculateStatsFromPlays = ({
     plays: plays.length,
     newGames,
     minutesSpent,
+    playsWithoutDuration,
     daysPlayed: dates.size,
     players: players.size,
     mostPlayedGames,

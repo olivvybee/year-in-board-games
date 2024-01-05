@@ -2,7 +2,7 @@ import { Result } from '@/components/Result';
 import { getStatsForUsername } from '@/stats/getStatsForUsername';
 
 import { DataContextProvider } from '@/context/DataContext';
-import { ErrorBanner } from '@/components/ErrorBanner';
+import { MessageBanner } from '@/components/MessageBanner';
 
 interface ViewPageProps {
   searchParams: {
@@ -18,26 +18,26 @@ const ViewPage = async ({ searchParams }: ViewPageProps) => {
 
   if (!username && !year) {
     return (
-      <ErrorBanner>
+      <MessageBanner severity="error">
         Could not generate an image because a username and year must be
         provided.
-      </ErrorBanner>
+      </MessageBanner>
     );
   }
 
   if (!username) {
     return (
-      <ErrorBanner>
+      <MessageBanner severity="error">
         Could not generate an image because a username must be provided.
-      </ErrorBanner>
+      </MessageBanner>
     );
   }
 
   if (!year) {
     return (
-      <ErrorBanner>
+      <MessageBanner severity="error">
         Could not generate an image because a year must be provided.
-      </ErrorBanner>
+      </MessageBanner>
     );
   }
 

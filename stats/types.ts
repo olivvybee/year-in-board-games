@@ -16,6 +16,7 @@ export interface Stats {
   plays: number;
   newGames: number;
   minutesSpent: number;
+  playsWithoutDuration: number;
   daysPlayed: number;
   players: number;
   mostPlayedGames: MostPlayedGame[];
