@@ -68,6 +68,9 @@ export const SetupForm = () => {
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          autoCorrect="off"
+          autoComplete="off"
+          autoCapitalize="off"
           className={styles.textField}
         />
       </div>
