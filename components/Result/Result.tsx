@@ -38,8 +38,17 @@ export const Result = () => {
   const showHoursWarning =
     data.stats.playsWithoutDuration > data.stats.plays * 0.4;
 
+  const showNoNewGamesWarning = data.stats.newGames === 0;
+
   return (
     <>
+      {showNoNewGamesWarning && (
+        <MessageBanner severity="warning" className={styles.banner}>
+          Were you expecting new games not to be zero? This is a quirk with
+          logging plays in BGG, and a workaround is on the way.
+        </MessageBanner>
+      )}
+
       {showHoursWarning && (
         <MessageBanner severity="warning" className={styles.banner}>
           A large number of your plays don't have the duration saved. The number
