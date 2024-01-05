@@ -25,7 +25,7 @@ export interface BGGPlayPlayer {
 
 export interface BGGPlay {
   item: BGGPlayItem;
-  players: {
+  players?: {
     player: BGGPlayPlayer[];
   };
   id: string;

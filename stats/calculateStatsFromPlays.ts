@@ -44,7 +44,7 @@ export const calculateStatsFromPlays = ({
       playsPerGame[gameId].minutesPlayed += length;
     }
 
-    const self = play.players.player.find(
+    const self = play.players?.player.find(
       (player) => player.username.toLowerCase() === username.toLowerCase()
     );
     const isNew = self?.new === '1';
@@ -52,12 +52,12 @@ export const calculateStatsFromPlays = ({
       newGames += 1;
     }
 
-    const otherPlayers = play.players.player
+    const otherPlayers = play.players?.player
       .filter(
         (player) => player.username.toLowerCase() !== username.toLowerCase()
       )
       .map((player) => player.name);
-    otherPlayers.forEach((player) => players.add(player));
+    otherPlayers?.forEach((player) => players.add(player));
 
     dates.add(play.date);
 
