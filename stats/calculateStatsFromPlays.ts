@@ -22,6 +22,8 @@ export const calculateStatsFromPlays = ({
 
   const players = new Set<string>();
   const dates = new Set<string>();
+
+  let playCount = 0;
   let minutesSpent = 0;
   let playsWithoutDuration = 0;
   let newGames = 0;
@@ -30,18 +32,20 @@ export const calculateStatsFromPlays = ({
     const gameId = parseInt(play.item.objectid, 10);
     const gameName = HTMLDecode(play.item.name);
     const length = parseInt(play.length, 10);
+    const count = parseInt(play.quantity, 10);
 
     playedGames.add(gameId);
+    playCount += count;
 
     if (playsPerGame[gameId] === undefined) {
       playsPerGame[gameId] = {
         id: gameId,
         name: gameName,
-        plays: 1,
+        plays: count,
         minutesPlayed: length,
       };
     } else {
-      playsPerGame[gameId].plays += 1;
+      playsPerGame[gameId].plays += count;
       playsPerGame[gameId].minutesPlayed += length;
     }
 
@@ -82,7 +86,7 @@ export const calculateStatsFromPlays = ({
 
   return {
     gamesPlayed: playedGames.size,
-    plays: plays.length,
+    plays: playCount,
     newGames,
     minutesSpent,
     playsWithoutDuration,
