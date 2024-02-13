@@ -5,7 +5,7 @@ export const Footer = () => (
     <div className={styles.footerContent}>
       <span>
         YIBG was created by{' '}
-        <a rel="me" href="https://fedi.beehive.gay/@olivvybee">
+        <a rel="me" href="https://meow.woem.cat/@olivvybee">
           olivvybee
         </a>
         . Help keep the site running by{' '}
