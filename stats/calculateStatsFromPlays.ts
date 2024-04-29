@@ -9,15 +9,19 @@ interface CalculateStatsParams {
   plays: BGGPlay[];
   username: string;
   sortBy: string;
+  startDate: string;
 }
 
 export const calculateStatsFromPlays = ({
   plays,
   username,
   sortBy,
+  startDate,
 }: CalculateStatsParams): Stats => {
   const playsPerGame: { [id: number]: MostPlayedGame } = {};
 
+  const historicallyPlayedGames = new Set<number>();
+  const newGames = new Set<number>();
   const playedGames = new Set<number>();
 
   const players = new Set<string>();
@@ -26,13 +30,21 @@ export const calculateStatsFromPlays = ({
   let playCount = 0;
   let minutesSpent = 0;
   let playsWithoutDuration = 0;
-  let newGames = 0;
 
-  for (let play of plays) {
+  const sortedPlays = plays.sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+
+  for (let play of sortedPlays) {
     const gameId = parseInt(play.item.objectid, 10);
     const gameName = HTMLDecode(play.item.name);
     const length = parseInt(play.length, 10);
     const count = parseInt(play.quantity, 10);
+
+    if (play.date < startDate) {
+      historicallyPlayedGames.add(gameId);
+      continue;
+    }
 
     playedGames.add(gameId);
     playCount += count;
@@ -49,12 +61,9 @@ export const calculateStatsFromPlays = ({
       playsPerGame[gameId].minutesPlayed += length;
     }
 
-    const self = play.players?.player.find(
-      (player) => player.username.toLowerCase() === username.toLowerCase()
-    );
-    const isNew = self?.new === '1';
+    const isNew = !historicallyPlayedGames.has(gameId);
     if (isNew) {
-      newGames += 1;
+      newGames.add(gameId);
     }
 
     const otherPlayers = play.players?.player
@@ -87,7 +96,7 @@ export const calculateStatsFromPlays = ({
   return {
     gamesPlayed: playedGames.size,
     plays: playCount,
-    newGames,
+    newGames: newGames.size,
     minutesSpent,
     playsWithoutDuration,
     daysPlayed: dates.size,

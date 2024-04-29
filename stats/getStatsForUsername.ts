@@ -4,7 +4,6 @@ import { fetchPlays } from '@/bgg/fetchPlays';
 import { fetchGames } from '@/bgg/fetchGames';
 
 import { calculateStatsFromPlays } from './calculateStatsFromPlays';
-import { getImageSize } from '@/utils/getImageSize';
 
 interface Params {
   username: string;
@@ -34,7 +33,6 @@ export const getStatsForUsername = async ({
 
   const plays = await fetchPlays({
     username,
-    startDate,
     endDate,
     includeExpansions,
   });
@@ -42,6 +40,7 @@ export const getStatsForUsername = async ({
     plays,
     sortBy,
     username,
+    startDate,
   });
 
   const mostPlayedGameIds = stats.mostPlayedGames.map((game) =>
