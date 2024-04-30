@@ -13,6 +13,16 @@ interface Params {
   includeExpansions?: boolean;
 }
 
+const createDateString = (
+  year: string,
+  month: string | undefined,
+  day: string
+) => {
+  const paddedMonth = month !== undefined ? month.padStart(2, '0') : '01';
+  const paddedDay = day.toString().padStart(2, '0');
+  return `${year}-${paddedMonth}-${paddedDay}`;
+};
+
 export const getStatsForUsername = async ({
   username,
   year,
@@ -28,8 +38,8 @@ export const getStatsForUsername = async ({
     throw new Error("Missing parameter 'year'");
   }
 
-  const startDate = !!month ? `${year}-${month}-01` : `${year}-01-01`;
-  const endDate = !!month ? `${year}-${month}-31` : `${year}-12-31`;
+  const startDate = createDateString(year, month, '01');
+  const endDate = createDateString(year, month, '31');
 
   const plays = await fetchPlays({
     username,
