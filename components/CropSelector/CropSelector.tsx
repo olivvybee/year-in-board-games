@@ -17,16 +17,25 @@ export type CropMode =
 
 export type CropSettings = { [gameId: number]: CropMode };
 
-const buildInitialState = (games: MostPlayedGame[]): CropSettings =>
-  games.reduce((processed, game) => ({ ...processed, [game.id]: 'Fit' }), {});
+const buildInitialState = (
+  games: MostPlayedGame[],
+  existingSettings: CropSettings
+): CropSettings =>
+  games.reduce(
+    (processed, game) => ({
+      ...processed,
+      [game.id]: existingSettings[game.id] || 'Fit',
+    }),
+    existingSettings
+  );
 
 export const CropSelector = () => {
-  const { stats, cropSettings, setCropSettings } = useContext(dataContext);
+  const { stats, cropSettings = {}, setCropSettings } = useContext(dataContext);
 
   const games = stats.mostPlayedGames;
 
   useEffect(() => {
-    const initialState = buildInitialState(games);
+    const initialState = buildInitialState(games, cropSettings);
     setCropSettings(initialState);
   }, [games]);
 

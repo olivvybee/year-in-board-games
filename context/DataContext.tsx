@@ -3,6 +3,7 @@
 import { CropSettings } from '@/components/CropSelector';
 import { Stats } from '@/stats/types';
 import { createContext, useState } from 'react';
+import { useLocalStorage } from 'usehooks-ts';
 
 interface Params {
   username: string;
@@ -43,7 +44,10 @@ export const DataContextProvider = ({
   params,
   stats,
 }: DataContextProviderProps) => {
-  const [cropSettings, setCropSettings] = useState<CropSettings>();
+  const [cropSettings, setCropSettings] = useLocalStorage<CropSettings>(
+    'crop-settings',
+    {}
+  );
 
   return (
     <dataContext.Provider
