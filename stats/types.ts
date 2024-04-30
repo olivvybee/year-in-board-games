@@ -9,6 +9,7 @@ export interface MostPlayedGame {
   plays: number;
   minutesPlayed: number;
   image?: string;
+  isNew: boolean;
 }
 
 export interface Stats {

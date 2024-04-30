@@ -27,8 +27,9 @@ export const generateAltText = ({
         sortBy === 'plays'
           ? `${game.plays} ${game.plays === 1 ? 'play' : 'plays'}`
           : `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+      const newIndicator = game.isNew ? ' - new game' : '';
 
-      return `${game.name} - ${amount};`;
+      return `${game.name} - ${amount}${newIndicator};`;
     })
     .join('\n');
 

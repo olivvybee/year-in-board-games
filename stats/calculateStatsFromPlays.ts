@@ -46,6 +46,11 @@ export const calculateStatsFromPlays = ({
       continue;
     }
 
+    const isNew = !historicallyPlayedGames.has(gameId);
+    if (isNew) {
+      newGames.add(gameId);
+    }
+
     playedGames.add(gameId);
     playCount += count;
 
@@ -55,15 +60,11 @@ export const calculateStatsFromPlays = ({
         name: gameName,
         plays: count,
         minutesPlayed: length,
+        isNew,
       };
     } else {
       playsPerGame[gameId].plays += count;
       playsPerGame[gameId].minutesPlayed += length;
-    }
-
-    const isNew = !historicallyPlayedGames.has(gameId);
-    if (isNew) {
-      newGames.add(gameId);
     }
 
     const otherPlayers = play.players?.player

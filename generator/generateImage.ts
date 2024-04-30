@@ -199,23 +199,41 @@ const drawMostPlayed = async (
     ? `${game.plays} ${game.plays === 1 ? 'play' : 'plays'}`
     : `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
 
-  const textX = x + BOX_ART_SIZE / 2;
+  const textOffset = game.isNew ? 40 : 0;
+
+  const textX = x - textOffset + BOX_ART_SIZE / 2;
   const { width: textWidth } = ctx.measureText(amount);
+
+  const textBackgroundX = textX - textWidth / 2 - 16;
+  const textBackgroundWidth = textWidth + 32;
+
+  const newBackgroundX = textBackgroundX + textBackgroundWidth + 10;
 
   ctx.fillStyle = '#eeeeee';
   ctx.shadowColor = 'black';
   ctx.shadowBlur = 10;
   ctx.beginPath();
   ctx.roundRect(
-    textX - textWidth / 2 - 16,
+    textBackgroundX,
     y + BOX_ART_SIZE - 32,
-    textWidth + 32,
+    textBackgroundWidth,
     58,
     10
   );
   ctx.fill();
 
+  if (game.isNew) {
+    ctx.beginPath();
+    ctx.roundRect(newBackgroundX, y + BOX_ART_SIZE - 32, 60, 58, 10);
+    ctx.fill();
+  }
+
   ctx.shadowBlur = 0;
   ctx.fillStyle = 'black';
   ctx.fillText(amount, textX, y + BOX_ART_SIZE);
+
+  if (game.isNew) {
+    ctx.font = '24px Atkinson Hyperlegible';
+    ctx.fillText('NEW', newBackgroundX + 30, y + BOX_ART_SIZE);
+  }
 };
