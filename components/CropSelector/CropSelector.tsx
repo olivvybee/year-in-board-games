@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 
 import { MostPlayedGame } from '@/stats/types';
 import { dataContext } from '@/context/DataContext';
@@ -30,9 +30,17 @@ const buildInitialState = (
   );
 
 export const CropSelector = () => {
-  const { stats, cropSettings = {}, setCropSettings } = useContext(dataContext);
+  const {
+    stats,
+    cropSettings = {},
+    setCropSettings,
+    gamesToShow,
+  } = useContext(dataContext);
 
-  const games = stats.mostPlayedGames;
+  const games = useMemo(
+    () => stats.mostPlayedGames.slice(0, gamesToShow),
+    [stats.mostPlayedGames, gamesToShow]
+  );
 
   useEffect(() => {
     const initialState = buildInitialState(games, cropSettings);

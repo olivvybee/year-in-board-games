@@ -6,7 +6,15 @@ import { drawImageFromDataUrl } from '@/utils/drawImageFromDataUrl';
 import { loadFont } from '@/utils/loadFont';
 import { CropMode, CropSettings } from '@/components/CropSelector';
 
+const CANVAS_WIDTH = 1600;
+const PADDING = 100;
 const BOX_ART_SIZE = 267;
+const GAMES_PER_ROW = 5;
+const MAX_ROW_WIDTH = CANVAS_WIDTH - 2 * PADDING;
+const GAME_SPACING_X =
+  (MAX_ROW_WIDTH - GAMES_PER_ROW * BOX_ART_SIZE) / (GAMES_PER_ROW - 1);
+const GRID_START_Y = 910;
+const GAME_SPACING_Y = BOX_ART_SIZE + 60;
 
 interface GenerateImageParams {
   canvas: HTMLCanvasElement;
@@ -16,6 +24,7 @@ interface GenerateImageParams {
   month?: string;
   sortBy: string;
   cropSettings?: CropSettings;
+  gamesToShow: number;
 }
 
 export const generateImage = async ({
@@ -26,9 +35,22 @@ export const generateImage = async ({
   month,
   sortBy,
   cropSettings = {},
+  gamesToShow,
 }: GenerateImageParams) => {
-  canvas.width = 1600;
-  canvas.height = 1600;
+  const numGames = Math.min(stats.mostPlayedGames.length, gamesToShow);
+
+  const rows = Math.ceil(numGames / GAMES_PER_ROW);
+  const fullRows = Math.max(0, Math.floor(numGames / GAMES_PER_ROW) - 1);
+
+  const remainingGameCount = numGames - fullRows * GAMES_PER_ROW;
+  const penultimateRowCount =
+    remainingGameCount === GAMES_PER_ROW
+      ? 0
+      : Math.ceil(remainingGameCount / 2);
+  const finalRowCount = remainingGameCount - penultimateRowCount;
+
+  canvas.width = CANVAS_WIDTH;
+  canvas.height = CANVAS_WIDTH + (rows - 2) * GAME_SPACING_Y;
 
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -130,47 +152,56 @@ export const generateImage = async ({
   ctx.font = '50px Atkinson Hyperlegible';
   ctx.fillText('Most played games', canvas.width / 2, 830);
 
-  const numMostPlayed = stats.mostPlayedGames.length;
-  const rows = Math.ceil(numMostPlayed / 5);
-  const topRowCount = rows === 1 ? numMostPlayed : Math.ceil(numMostPlayed / 2);
-  const bottomRowCount = numMostPlayed - topRowCount;
-
-  const leftEdge = 100;
-  const rightEdge = canvas.width - 100;
-  const availableSpace = rightEdge - leftEdge;
-
-  const spacing = (availableSpace - 5 * BOX_ART_SIZE) / 4;
-
-  const topRowWidth =
-    topRowCount * BOX_ART_SIZE + Math.max(0, topRowCount - 1) * spacing;
-  const topRowStartX = leftEdge + (availableSpace - topRowWidth) / 2;
-
-  const bottomRowWidth =
-    bottomRowCount * BOX_ART_SIZE + Math.max(0, bottomRowCount - 1) * spacing;
-  const bottomRowStartX = leftEdge + (availableSpace - bottomRowWidth) / 2;
-
   ctx.font = '36px Atkinson Hyperlegible';
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'center';
 
   const showPlays = sortBy === 'plays';
 
-  for (let i = 0; i < topRowCount; i++) {
-    const game = stats.mostPlayedGames[i];
-    const cropMode = cropSettings[game.id] || 'Fit';
-    const x = topRowStartX + i * BOX_ART_SIZE + i * spacing;
-    await drawMostPlayed(ctx, game, x, 910, showPlays, cropMode);
+  for (let i = 0; i < fullRows; i++) {
+    const games = stats.mostPlayedGames.slice(
+      i * GAMES_PER_ROW,
+      (i + 1) * GAMES_PER_ROW
+    );
+
+    await drawRow(ctx, games, i, showPlays, cropSettings);
+  }
+  if (penultimateRowCount > 0) {
+    const penultimateRowGames = stats.mostPlayedGames.slice(
+      numGames - remainingGameCount,
+      numGames - remainingGameCount + penultimateRowCount
+    );
+    await drawRow(ctx, penultimateRowGames, fullRows, showPlays, cropSettings);
   }
 
-  for (let i = 0; i < bottomRowCount; i++) {
-    const game = stats.mostPlayedGames[i + topRowCount];
-    const cropMode = cropSettings[game.id] || 'Fit';
-    const x = bottomRowStartX + i * BOX_ART_SIZE + i * spacing;
-    await drawMostPlayed(ctx, game, x, 1235, showPlays, cropMode);
-  }
+  const finalRowGames = stats.mostPlayedGames.slice(
+    numGames - finalRowCount,
+    numGames
+  );
+  await drawRow(ctx, finalRowGames, rows - 1, showPlays, cropSettings);
 
   const imageData = canvas.toDataURL('image/png');
   return imageData;
+};
+
+const drawRow = async (
+  ctx: CanvasRenderingContext2D,
+  games: MostPlayedGame[],
+  rowIndex: number,
+  showPlays: boolean,
+  cropSettings: CropSettings
+) => {
+  const count = games.length;
+  const width = count * BOX_ART_SIZE + Math.max(0, count - 1) * GAME_SPACING_X;
+  const startX = 100 + (MAX_ROW_WIDTH - width) / 2;
+
+  for (let i = 0; i < count; i++) {
+    const game = games[i];
+    const cropMode = cropSettings[game.id];
+    const x = startX + i * BOX_ART_SIZE + i * GAME_SPACING_X;
+    const y = GRID_START_Y + rowIndex * GAME_SPACING_Y;
+    await drawMostPlayed(ctx, game, x, y, showPlays, cropMode);
+  }
 };
 
 const drawMostPlayed = async (

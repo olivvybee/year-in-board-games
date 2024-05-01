@@ -16,10 +16,12 @@ interface Params {
 export interface Data extends Params {
   stats: Stats;
   cropSettings?: CropSettings;
+  gamesToShow: number;
 }
 
 export interface DataContext extends Data {
   setCropSettings: (settings: CropSettings) => void;
+  setGamesToShow: (value: number) => void;
 }
 
 export const dataContext = createContext<DataContext>({
@@ -31,6 +33,8 @@ export const dataContext = createContext<DataContext>({
   includeExpansions: false,
   cropSettings: undefined,
   setCropSettings: () => {},
+  gamesToShow: 10,
+  setGamesToShow: () => {},
 });
 
 interface DataContextProviderProps {
@@ -44,6 +48,11 @@ export const DataContextProvider = ({
   params,
   stats,
 }: DataContextProviderProps) => {
+  const [gamesToShow, setGamesToShow] = useLocalStorage<number>(
+    'games-to-show',
+    10
+  );
+
   const [cropSettings, setCropSettings] = useLocalStorage<CropSettings>(
     'crop-settings',
     {}
@@ -51,7 +60,14 @@ export const DataContextProvider = ({
 
   return (
     <dataContext.Provider
-      value={{ ...params, stats, cropSettings, setCropSettings }}>
+      value={{
+        ...params,
+        stats,
+        cropSettings,
+        setCropSettings,
+        gamesToShow,
+        setGamesToShow,
+      }}>
       {children}
     </dataContext.Provider>
   );

@@ -92,7 +92,7 @@ export const calculateStatsFromPlays = ({
     Object.values(playsPerGame),
     sortParameters,
     ['desc', 'desc', 'asc']
-  ).slice(0, 10);
+  ).slice(0, 25);
 
   return {
     gamesPlayed: playedGames.size,
