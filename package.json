@@ -15,7 +15,7 @@
     "html-entities": "^2.4.0",
     "image-data-uri": "^2.0.1",
     "lodash": "^4.17.21",
-    "next": "14.0.4",
+    "next": "^14.2.14",
     "react": "^18",
     "react-collapse": "^5.1.1",
     "react-dom": "^18",
