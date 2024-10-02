@@ -32,6 +32,7 @@ export const Result = () => {
   }, [data]);
 
   const showHoursWarning =
+    data.stats.minutesSpent > 0 &&
     data.stats.playsWithoutDuration > data.stats.plays * 0.4;
 
   return (
