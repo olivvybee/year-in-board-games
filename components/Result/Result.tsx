@@ -15,22 +15,18 @@ export const Result = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
-  const updating = useRef<boolean>(false);
-
   const [imageData, setImageData] = useState<string>();
 
   const updateImageData = async () => {
-    updating.current = true;
     const newImageData = await generateImage({
       canvas: canvasRef.current!,
       ...data,
     });
     setImageData(newImageData);
-    updating.current = false;
   };
 
   useEffect(() => {
-    if (canvasRef.current && imageRef.current && !updating.current) {
+    if (canvasRef.current && imageRef.current) {
       updateImageData();
     }
   }, [data]);
