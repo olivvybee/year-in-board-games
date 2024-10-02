@@ -21,10 +21,10 @@ import { Dropdown, Option } from '../Dropdown';
 const FILENAME = 'year-in-review';
 
 const GAME_COUNT_OPTIONS: Option<string>[] = [
+  { label: '5', value: '5' },
   { label: '10', value: '10' },
   { label: '15', value: '15' },
   { label: '20', value: '20' },
-  { label: '25', value: '25' },
 ];
 
 interface SidebarProps {
