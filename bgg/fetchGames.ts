@@ -1,4 +1,5 @@
 import { XMLParser } from 'fast-xml-parser';
+import _chunk from 'lodash/chunk';
 
 import { BASE_URL } from './constants';
 import { BGGGame, Game } from './types';
@@ -10,25 +11,32 @@ export interface BGGGamesResponse {
 }
 
 export const fetchGames = async (gameIds: string[]): Promise<Game[]> => {
-  const params = {
-    id: gameIds.join(','),
-    thing: 'boardgame',
-  };
+  const games: Game[] = [];
+  const chunks = _chunk(gameIds, 20);
 
-  const response = await makeRequest('thing', params);
+  for (let chunk of chunks) {
+    const params = {
+      id: chunk.join(','),
+      thing: 'boardgame',
+    };
 
-  if (!response) {
-    throw new Error('No data returned from BGG');
+    const response = await makeRequest('thing', params);
+
+    if (!response) {
+      throw new Error('No data returned from BGG');
+    }
+
+    games.push(
+      ...(response.items.item?.map((game) => ({
+        id: game.id,
+        name: game.name.find((name) => name.type === 'primary')!.value,
+        image: game.image,
+        thumbnail: game.thumbnail,
+      })) || [])
+    );
   }
 
-  return (
-    response.items.item?.map((game) => ({
-      id: game.id,
-      name: game.name.find((name) => name.type === 'primary')!.value,
-      image: game.image,
-      thumbnail: game.thumbnail,
-    })) || []
-  );
+  return games;
 };
 
 const ARRAY_PATHS = ['items.item.name'];
