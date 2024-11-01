@@ -17,7 +17,6 @@ const GRID_START_Y = 910;
 const GAME_SPACING_Y = BOX_ART_SIZE + 60;
 
 interface GenerateImageParams {
-  canvas: HTMLCanvasElement;
   stats: Stats;
   username: string;
   year: string;
@@ -28,7 +27,6 @@ interface GenerateImageParams {
 }
 
 export const generateImage = async ({
-  canvas,
   stats,
   username,
   year,
@@ -37,6 +35,8 @@ export const generateImage = async ({
   cropSettings = {},
   gamesToShow,
 }: GenerateImageParams) => {
+  const canvas = document.createElement('canvas');
+
   const numGames = Math.min(stats.mostPlayedGames.length, gamesToShow);
 
   const rows = Math.ceil(numGames / GAMES_PER_ROW);
