@@ -1,7 +1,5 @@
-import { XMLParser } from 'fast-xml-parser';
-
-import { BASE_URL } from './constants';
 import { BGGPlay } from './types';
+import { makeRequest } from './makeRequest';
 
 export interface BGGPlaysResponse {
   plays: {
@@ -23,6 +21,12 @@ interface FetchPlaysParams {
 const getPlaySubtypes = (play: BGGPlay) =>
   play.item.subtypes.subtype.map((subtype) => subtype.value);
 
+const ARRAY_PATHS = [
+  'plays.play',
+  'plays.play.item.subtypes.subtype',
+  'plays.play.players.player',
+];
+
 export const fetchPlays = async ({
   username,
   startDate,
@@ -36,7 +40,11 @@ export const fetchPlays = async ({
     ...(!!startDate ? { mindate: startDate } : {}),
   };
 
-  const response = await makeRequest('plays', params);
+  const response = await makeRequest<BGGPlaysResponse>(
+    'plays',
+    params,
+    ARRAY_PATHS
+  );
 
   if (!response) {
     throw new Error('No data returned from BGG');
@@ -48,10 +56,14 @@ export const fetchPlays = async ({
   let plays = response.plays.play || [];
 
   for (let page = 2; page <= numPages; page++) {
-    const pageResponse = await makeRequest('plays', {
-      ...params,
-      page: page.toString(),
-    });
+    const pageResponse = await makeRequest<BGGPlaysResponse>(
+      'plays',
+      {
+        ...params,
+        page: page.toString(),
+      },
+      ARRAY_PATHS
+    );
 
     if (!response) {
       throw new Error(`BGG failed to return page ${page}`);
@@ -75,32 +87,4 @@ export const fetchPlays = async ({
       });
 
   return filteredPlays;
-};
-
-const ARRAY_PATHS = [
-  'plays.play',
-  'plays.play.item.subtypes.subtype',
-  'plays.play.players.player',
-];
-
-const makeRequest = async (
-  path: string,
-  params: Record<string, string>
-): Promise<BGGPlaysResponse> => {
-  const queryParams = new URLSearchParams(params);
-  const url = `${BASE_URL}/${path}?${queryParams.toString()}`;
-
-  const response = await fetch(url);
-  const body = await response.text();
-
-  const parser = new XMLParser({
-    ignoreAttributes: false,
-    attributeNamePrefix: '',
-    ignoreDeclaration: true,
-    isArray: (tagName, jPath, isLeafNode, isAttribute) =>
-      ARRAY_PATHS.includes(jPath),
-  });
-  const parsedResponse = parser.parse(body);
-
-  return parsedResponse;
 };

@@ -1,14 +1,15 @@
-import { XMLParser } from 'fast-xml-parser';
 import _chunk from 'lodash/chunk';
 
-import { BASE_URL } from './constants';
 import { BGGGame, Game } from './types';
+import { makeRequest } from './makeRequest';
 
 export interface BGGGamesResponse {
   items: {
     item?: BGGGame[];
   };
 }
+
+const ARRAY_PATHS = ['items.item.name'];
 
 export const fetchGames = async (gameIds: string[]): Promise<Game[]> => {
   const games: Game[] = [];
@@ -20,7 +21,11 @@ export const fetchGames = async (gameIds: string[]): Promise<Game[]> => {
       thing: 'boardgame',
     };
 
-    const response = await makeRequest('thing', params);
+    const response = await makeRequest<BGGGamesResponse>(
+      'thing',
+      params,
+      ARRAY_PATHS
+    );
 
     if (!response) {
       throw new Error('No data returned from BGG');
@@ -37,28 +42,4 @@ export const fetchGames = async (gameIds: string[]): Promise<Game[]> => {
   }
 
   return games;
-};
-
-const ARRAY_PATHS = ['items.item.name'];
-
-const makeRequest = async (
-  path: string,
-  params: Record<string, string>
-): Promise<BGGGamesResponse> => {
-  const queryParams = new URLSearchParams(params);
-  const url = `${BASE_URL}/${path}?${queryParams.toString()}`;
-
-  const response = await fetch(url);
-  const body = await response.text();
-
-  const parser = new XMLParser({
-    ignoreAttributes: false,
-    attributeNamePrefix: '',
-    ignoreDeclaration: true,
-    isArray: (tagName, jPath, isLeafNode, isAttribute) =>
-      ARRAY_PATHS.includes(jPath),
-  });
-  const parsedResponse = parser.parse(body);
-
-  return parsedResponse;
 };

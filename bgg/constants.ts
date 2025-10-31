@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://www.boardgamegeek.com/xmlapi2';
+export const BASE_URL = 'https://boardgamegeek.com/xmlapi2';
