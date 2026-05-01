@@ -104,33 +104,35 @@ export const generateImage = async ({
 
   ctx.textAlign = 'center';
 
+  const playsText = stats.plays === 1 ? 'play' : 'plays';
+
   ctx.font = '320px Atkinson Hyperlegible';
-  const { width: countWidth } = ctx.measureText(stats.gamesPlayed.toString());
+  const { width: countWidth } = ctx.measureText(stats.plays.toString());
   ctx.font = '65px Atkinson Hyperlegible';
-  const { width: textWidth } = ctx.measureText('games played');
+  const { width: textWidth } = ctx.measureText(playsText);
 
   const midpoint = canvas.width - 100 - Math.max(textWidth, countWidth) / 2;
 
   ctx.font = '320px Atkinson Hyperlegible';
-  ctx.fillText(stats.gamesPlayed.toString(), midpoint, 65);
+  ctx.fillText(stats.plays.toString(), midpoint, 65);
   ctx.font = '65px Atkinson Hyperlegible';
-  ctx.fillText('games played', midpoint, 350);
+  ctx.fillText(playsText, midpoint, 350);
 
   const hours = Math.round(stats.minutesSpent / 60);
   const usePlayerCount = stats.minutesSpent === 0;
 
   ctx.font = '140px Atkinson Hyperlegible';
-  ctx.fillText(stats.plays.toString(), 245, 530);
+  ctx.fillText(stats.gamesPlayed.toString(), 245, 530);
   ctx.fillText(stats.newGames.toString(), 615, 530);
   ctx.fillText(
     usePlayerCount ? stats.players.toString() : hours.toString(),
     985,
-    530
+    530,
   );
   ctx.fillText(stats.daysPlayed.toString(), 1355, 530);
 
   ctx.font = '40px Atkinson Hyperlegible';
-  ctx.fillText(stats.plays === 1 ? 'play' : 'plays', 245, 670);
+  ctx.fillText(stats.gamesPlayed === 1 ? 'game' : 'games', 245, 670);
   ctx.fillText(stats.newGames === 1 ? 'new game' : 'new games', 615, 670);
   ctx.fillText(
     usePlayerCount
@@ -138,15 +140,15 @@ export const generateImage = async ({
         ? 'other player'
         : 'other players'
       : hours === 1
-      ? 'hour'
-      : 'hours',
+        ? 'hour'
+        : 'hours',
     985,
-    670
+    670,
   );
   ctx.fillText(
     stats.daysPlayed === 1 ? 'day played' : 'days played',
     1355,
-    670
+    670,
   );
 
   ctx.font = '50px Atkinson Hyperlegible';
@@ -161,7 +163,7 @@ export const generateImage = async ({
   for (let i = 0; i < fullRows; i++) {
     const games = stats.mostPlayedGames.slice(
       i * GAMES_PER_ROW,
-      (i + 1) * GAMES_PER_ROW
+      (i + 1) * GAMES_PER_ROW,
     );
 
     await drawRow(ctx, games, i, showPlays, cropSettings);
@@ -169,14 +171,14 @@ export const generateImage = async ({
   if (penultimateRowCount > 0) {
     const penultimateRowGames = stats.mostPlayedGames.slice(
       numGames - remainingGameCount,
-      numGames - remainingGameCount + penultimateRowCount
+      numGames - remainingGameCount + penultimateRowCount,
     );
     await drawRow(ctx, penultimateRowGames, fullRows, showPlays, cropSettings);
   }
 
   const finalRowGames = stats.mostPlayedGames.slice(
     numGames - finalRowCount,
-    numGames
+    numGames,
   );
   await drawRow(ctx, finalRowGames, rows - 1, showPlays, cropSettings);
 
@@ -189,7 +191,7 @@ const drawRow = async (
   games: MostPlayedGame[],
   rowIndex: number,
   showPlays: boolean,
-  cropSettings: CropSettings
+  cropSettings: CropSettings,
 ) => {
   const count = games.length;
   const width = count * BOX_ART_SIZE + Math.max(0, count - 1) * GAME_SPACING_X;
@@ -210,7 +212,7 @@ const drawMostPlayed = async (
   x: number,
   y: number,
   showPlays: boolean,
-  cropMode: CropMode
+  cropMode: CropMode,
 ) => {
   ctx.font = '36px Atkinson Hyperlegible';
   ctx.textBaseline = 'middle';
@@ -249,7 +251,7 @@ const drawMostPlayed = async (
     y + BOX_ART_SIZE - 32,
     textBackgroundWidth,
     58,
-    10
+    10,
   );
   ctx.fill();
 
