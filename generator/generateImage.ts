@@ -14,7 +14,8 @@ const MAX_ROW_WIDTH = CANVAS_WIDTH - 2 * PADDING;
 const GAME_SPACING_X =
   (MAX_ROW_WIDTH - GAMES_PER_ROW * BOX_ART_SIZE) / (GAMES_PER_ROW - 1);
 const GRID_START_Y = 910;
-const GAME_SPACING_Y = BOX_ART_SIZE + 60;
+const GRID_SPACING_Y = 60;
+const GAME_SPACING_Y = BOX_ART_SIZE + GRID_SPACING_Y;
 
 interface GenerateImageParams {
   stats: Stats;
@@ -50,7 +51,7 @@ export const generateImage = async ({
   const finalRowCount = remainingGameCount - penultimateRowCount;
 
   canvas.width = CANVAS_WIDTH;
-  canvas.height = CANVAS_WIDTH + (rows - 2) * GAME_SPACING_Y;
+  canvas.height = CANVAS_WIDTH + (rows - 2) * GAME_SPACING_Y + GRID_SPACING_Y;
 
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -181,6 +182,17 @@ export const generateImage = async ({
     numGames,
   );
   await drawRow(ctx, finalRowGames, rows - 1, showPlays, cropSettings);
+
+  ctx.font = '28px Atkinson Hyperlegible';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillStyle = 'white';
+  ctx.globalAlpha = 0.4;
+  ctx.fillText(
+    'Generated using yibg.boardgametools.app',
+    10,
+    canvas.height - 10,
+  );
 
   const imageData = canvas.toDataURL('image/png');
   return imageData;
